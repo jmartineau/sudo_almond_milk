@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="edu.csumb.ma6317.myapplication.signUp">
+
+    <TextView
+        android:id="@+id/signUpTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Sign Up With"
+        android:textColor="@android:color/black"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/googSignUpTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GOOGLE"
+        android:textSize="24sp"
+        android:layout_alignBottom="@+id/fbSignUpTxt"
+        android:layout_toRightOf="@+id/textView8"
+        android:layout_toEndOf="@+id/textView8"
+        android:layout_alignTop="@+id/fbImg" />
+
+    <TextView
+        android:id="@+id/fbSignUpTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FACEBOOK"
+        android:textSize="24sp"
+        android:layout_alignBottom="@+id/fbImg"
+        android:layout_toRightOf="@+id/fbImg"
+        android:layout_toEndOf="@+id/fbImg"
+        android:layout_alignTop="@+id/fbImg" />
+
+    <ImageView
+        android:id="@+id/fbImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/sym_call_incoming"
+        android:layout_below="@+id/signUpTxt"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="19dp" />
+
+    <ImageView
+        android:id="@+id/googImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/sym_call_outgoing"
+        android:layout_alignBottom="@+id/googSignUpTxt"
+        android:layout_alignRight="@+id/textView8"
+        android:layout_alignEnd="@+id/textView8" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/googSignUpTxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="---------- or ----------"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/profImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView8"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <EditText
+        android:id="@+id/firstTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profImg"
+        android:layout_centerHorizontal="true"
+        android:ems="16"
+        android:inputType="textPersonName"
+        android:text="First" />
+
+    <EditText
+        android:id="@+id/lastTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="16"
+        android:inputType="textPersonName"
+        android:text="Last"
+        android:layout_below="@+id/firstTxt"
+        android:layout_alignLeft="@+id/firstTxt"
+        android:layout_alignStart="@+id/firstTxt" />
+
+    <EditText
+        android:id="@+id/emailTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lastTxt"
+        android:layout_alignStart="@+id/lastTxt"
+        android:layout_below="@+id/lastTxt"
+        android:ems="16"
+        android:inputType="textPersonName"
+        android:text="Email" />
+
+    <EditText
+        android:id="@+id/passTxtInp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:inputType="textPassword"
+        android:layout_below="@+id/emailTxt"
+        android:layout_alignRight="@+id/googSignUpTxt"
+        android:layout_alignEnd="@+id/googSignUpTxt" />
+
+    <TextView
+        android:id="@+id/passMsgTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/passTxtInp"
+        android:layout_toLeftOf="@+id/passTxtInp"
+        android:layout_toStartOf="@+id/passTxtInp"
+        android:text="Password:"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/registerButt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passTxtInp"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:text="Register"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/backLoginButt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/emailTxt"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/emailTxt"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        android:text="Login"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/backLoginTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/backLoginButt"
+        android:layout_alignBottom="@+id/backLoginButt"
+        android:layout_toEndOf="@+id/fbImg"
+        android:layout_toRightOf="@+id/fbImg"
+        android:text="Already have a Login?"
+        android:textSize="20sp" />
+
+</RelativeLayout>
