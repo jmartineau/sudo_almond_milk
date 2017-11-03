@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.csumb.ma6317.myapplication.login">
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profImg"
+        android:layout_marginTop="21dp"
+        android:layout_toEndOf="@+id/info5Txt"
+        android:layout_toRightOf="@+id/info5Txt"
+        android:ems="12"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/editText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText3"
+        android:layout_alignStart="@+id/editText3"
+        android:layout_below="@+id/editText3"
+        android:ems="12"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/info5Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText4"
+        android:layout_alignBottom="@+id/editText4"
+        android:layout_alignLeft="@+id/fbImg"
+        android:layout_alignStart="@+id/fbImg"
+        android:text="Password:"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/info3Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:text="---------- or ----------"
+        android:textSize="24sp"
+        android:layout_below="@+id/info1Txt"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/profImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info3Txt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/info2Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_toEndOf="@+id/imageView2"
+        android:layout_toRightOf="@+id/imageView2"
+        android:text="GOOGLE"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/info1Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FACEBOOK"
+        android:textSize="24sp"
+        android:layout_alignBottom="@+id/fbImg"
+        android:layout_toRightOf="@+id/fbImg"
+        android:layout_toEndOf="@+id/fbImg" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/sym_call_outgoing"
+        android:layout_marginLeft="39dp"
+        android:layout_marginStart="39dp"
+        android:layout_alignBottom="@+id/info1Txt"
+        android:layout_toRightOf="@+id/info1Txt"
+        android:layout_toEndOf="@+id/info1Txt" />
+
+    <ImageView
+        android:id="@+id/fbImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        app:srcCompat="@android:drawable/sym_call_incoming"
+        android:layout_below="@+id/info0Txt"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp" />
+
+    <TextView
+        android:id="@+id/info0Txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:text="LOGIN"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/loginButt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:ems="16"
+        android:textSize="20sp"
+        android:layout_below="@+id/editText4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="39dp" />
+
+    <TextView
+        android:id="@+id/info6Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/info5Txt"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/info5Txt"
+        android:layout_marginBottom="29dp"
+        android:text="Create New Account:"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/createAccButt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Account"
+        android:layout_alignBaseline="@+id/info6Txt"
+        android:layout_alignBottom="@+id/info6Txt"
+        android:layout_alignRight="@+id/editText4"
+        android:layout_alignEnd="@+id/editText4" />
+
+    <TextView
+        android:id="@+id/info4Txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText3"
+        android:layout_alignBottom="@+id/editText3"
+        android:layout_alignLeft="@+id/info5Txt"
+        android:layout_alignStart="@+id/info5Txt"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:text="Email:"
+        android:textSize="18sp" />
+</RelativeLayout>

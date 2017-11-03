@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="edu.csumb.ma6317.myapplication.initScreen"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/welcomeTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Welcome"
+        android:textColor="@android:color/black"
+        android:textSize="48sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="123dp"
+        app:srcCompat="@android:drawable/btn_star_big_on"
+        android:layout_weight="0.49" />
+
+    <Button
+        android:id="@+id/signUpButt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:textSize="36sp" />
+
+    <Button
+        android:id="@+id/logInButt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        android:textSize="36sp" />
+
+    <Button
+        android:id="@+id/guestButt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Continue As Guest"
+        android:textSize="36sp" />
+</LinearLayout>
