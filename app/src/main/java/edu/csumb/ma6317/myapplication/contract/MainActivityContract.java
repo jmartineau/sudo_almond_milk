@@ -1,9 +1,5 @@
 package edu.csumb.ma6317.myapplication.contract;
 
-/**
- * Created by sinistro on 10/31/17.
- */
-
 public interface MainActivityContract {
 
     interface View {

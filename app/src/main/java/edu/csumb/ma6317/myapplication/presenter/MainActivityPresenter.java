@@ -1,14 +1,8 @@
 package edu.csumb.ma6317.myapplication.presenter;
 
-import android.view.View;
 
 import edu.csumb.ma6317.myapplication.contract.MainActivityContract;
 import edu.csumb.ma6317.myapplication.model.MainActivityModel;
-import edu.csumb.ma6317.myapplication.view.MainActivity;
-
-/**
- * Created by sinistro on 10/31/17.
- */
 
 public class MainActivityPresenter implements MainActivityContract.Presenter {
 

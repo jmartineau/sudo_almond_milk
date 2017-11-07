@@ -1,6 +1,5 @@
 package edu.csumb.ma6317.myapplication.view;
 
-import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,8 +26,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void initView() {
-        mTextView = (TextView) findViewById(R.id.textView);
-        mButton = (Button) findViewById(R.id.button);
+        mTextView = findViewById(R.id.textView);
+        mButton = findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
