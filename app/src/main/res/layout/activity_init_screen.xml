@@ -25,17 +25,17 @@
         android:layout_weight="0.49" />
 
     <Button
-        android:id="@+id/signUpButt"
+        android:id="@+id/signInButt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Up"
+        android:text="Sign In"
         android:textSize="36sp" />
 
     <Button
-        android:id="@+id/logInButt"
+        android:id="@+id/logoutButt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log In"
+        android:text="Log Out"
         android:textSize="36sp" />
 
     <Button
