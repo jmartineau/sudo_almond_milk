@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".login" />
+        <activity android:name=".home" />
+        <activity android:name=".initScreen" />
+        <activity android:name=".addLang" />
+        <activity android:name=".deleteLang" />
+        <activity android:name=".failMsg" />
+        <activity android:name=".incomingCall" />
+        <activity android:name=".profCreate" />
+        <activity android:name=".profPic" />
+        <activity android:name=".profile" />
+        <activity android:name=".rateCall" />
+        <activity android:name=".signUp"></activity>
     </application>
 
 </manifest>
