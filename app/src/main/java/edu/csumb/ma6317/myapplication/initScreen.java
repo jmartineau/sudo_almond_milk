@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +21,7 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
+    // Button variables
     private Button signInButton;
     private Button contGuestButton;
 
@@ -44,6 +46,8 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
         if (v.getId() == R.id.signInButt) {
             if (auth.getCurrentUser() != null) {
                 // User is signed in
+                Intent intent = new Intent(this, profCreate.class);
+                startActivity(intent);
             } else {
                 // User is signed out
                 startActivityForResult(
@@ -56,25 +60,32 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
                                 .build(),
                         RC_SIGN_IN);
             }
-
-            Intent intent = new Intent(this, signUp.class);
-            startActivity(intent);
         } else if (v.getId() == R.id.guestButt) {
+            signOut();
             Intent intent = new Intent(this, profCreate.class);
             startActivity(intent);
         } else {
             return;
         }
     }
-}
-//        final Button logoutButton = findViewById(R.id.logoutButt);
-//        logoutButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Code here executes on main thread after user presses button
-//                signOut();
-//            }
-//        });
 
-//    public void signOut() {
-//        AuthUI.getInstance().signOut(this);
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign-in succeeded, set up the UI
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, profCreate.class);
+                startActivity(intent);
+            } else if (resultCode == RESULT_CANCELED) {
+                // Sign in was canceled by the user, return to previous activity
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void signOut() {
+        AuthUI.getInstance().signOut(this);
+    }
+}
