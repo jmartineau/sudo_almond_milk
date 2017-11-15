@@ -7,8 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
@@ -20,6 +24,11 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
     // Firebase instance variables
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
+
+
+    // GeoFire
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("path/to/geofire");
+    GeoFire geoFire = new GeoFire(ref);
 
     // Button variables
     private Button signInButton;
@@ -48,6 +57,10 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
                 // User is signed in
                 Intent intent = new Intent(this, profCreate.class);
                 startActivity(intent);
+
+                // test to send location to firebase
+                geoFire.setLocation("firebase-hq", new GeoLocation(37.7853889, -122.4056973));
+
             } else {
                 // User is signed out
                 startActivityForResult(
