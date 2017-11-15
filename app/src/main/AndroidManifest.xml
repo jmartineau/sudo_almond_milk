@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-library android:name="com.google.android.maps" />
-        <activity android:name=".initScreen">
+        <activity android:name=".MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +29,7 @@
         <activity android:name=".home" />
         <activity android:name=".addLang" />
         <activity android:name=".deleteLang" />
-        <activity android:name=".MapsActivity" />
+        <activity android:name=".initScreen" />
         <activity android:name=".failMsg" />
         <activity android:name=".incomingCall" />
         <activity android:name=".profCreate" />
