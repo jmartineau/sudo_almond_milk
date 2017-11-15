@@ -27,8 +27,8 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
 
 
     // GeoFire
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("path/to/geofire");
-    GeoFire geoFire = new GeoFire(ref);
+    //private DatabaseReference mDatabaseRef;
+    //private GeoFire mGeoFire;
 
     // Button variables
     private Button signInButton;
@@ -49,6 +49,9 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
         //set the click listeners for the buttons
         signInButton.setOnClickListener(this);
         contGuestButton.setOnClickListener(this);
+
+        //mDatabaseRef = FirebaseDatabase.getInstance().getReference("path/geofire");
+        //mGeoFire = new GeoFire(mDatabaseRef);
     }
 
     public void onClick(View v) {
@@ -59,7 +62,7 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
                 startActivity(intent);
 
                 // test to send location to firebase
-                geoFire.setLocation("firebase-hq", new GeoLocation(37.7853889, -122.4056973));
+               // mGeoFire.setLocation("firebase-hq", new GeoLocation(37.7853889, -122.4056973));
 
             } else {
                 // User is signed out
