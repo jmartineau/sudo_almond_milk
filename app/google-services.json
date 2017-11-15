@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "743482161856",
+    "firebase_url": "https://sudo-almond-milk.firebaseio.com",
+    "project_id": "sudo-almond-milk",
+    "storage_bucket": "sudo-almond-milk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743482161856:android:a87bb67e95ec5ae1",
+        "android_client_info": {
+          "package_name": "edu.csumb.ma6317.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743482161856-89frkvn4l90vtl9ct6ogfukak8qn9ed7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.csumb.ma6317.myapplication",
+            "certificate_hash": "1f84dac743ed6588f0e5aa28c9da0b293ea012df"
+          }
+        },
+        {
+          "client_id": "743482161856-cc05qbnll7flae1q16bu887t51ufjuta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO3iKew4fGnT5OveKhFiaGI2sEAoZdTuA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743482161856-cc05qbnll7flae1q16bu887t51ufjuta.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
