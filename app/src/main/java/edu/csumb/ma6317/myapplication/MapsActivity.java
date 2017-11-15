@@ -39,6 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
+    private Marker mCurrLocationMarker2;
     private LocationRequest mLocationRequest;
 
     // GeoFire
@@ -138,9 +139,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrLocationMarker = mMap.addMarker(markerOptions);
         mGeoFire.setLocation("firebase-hq", new GeoLocation(location.getLatitude(), location.getLongitude()));
 
+        double earthRadius = 3958.75;
+        double lat2 = 36.9741;
+        double lng2 = -122.0308;
+
+        double dLat = Math.toRadians(location.getLatitude()-lat2);
+        double dLng = Math.toRadians(location.getLongitude()-lng2);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(location.getLatitude())) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = earthRadius * c;
+
+        LatLng latLng2 = new LatLng(lat2, lng2);
+        MarkerOptions markerOptions2 = new MarkerOptions();
+        markerOptions2.position(latLng2);
+        markerOptions2.title("Santa Cruz");
+        markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
+
+
+        Toast.makeText(getApplicationContext(),
+                "Distance to Santa Cruz: " + dist, Toast.LENGTH_LONG).show();
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng2));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
