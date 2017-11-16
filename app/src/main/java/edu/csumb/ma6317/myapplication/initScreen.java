@@ -13,9 +13,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,8 +21,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
@@ -45,11 +40,6 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
     // Firebase instance variables
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
-
-
-    // GeoFire
-    //private DatabaseReference mDatabaseRef;
-    //private GeoFire mGeoFire;
 
     // Button variables
     private Button signInButton;
@@ -82,9 +72,6 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
                 // User is signed in
                 Intent intent = new Intent(this, profCreate.class);
                 startActivity(intent);
-
-                // test to send location to firebase
-               // mGeoFire.setLocation("firebase-hq", new GeoLocation(37.7853889, -122.4056973));
 
             } else {
                 // User is signed out
@@ -188,40 +175,6 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted. Do the
-                    // contacts-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        if (mGoogleApiClient == null) {
-                            buildGoogleApiClient();
-                        }
-
-                        //mMap.setMyLocationEnabled(true);
-                    }
-
-                } else {
-
-                    // Permission denied, Disable the functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other permissions this app might request.
-            // You can add here other case statements according to your requirement.
-        }
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
