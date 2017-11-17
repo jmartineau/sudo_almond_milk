@@ -22,6 +22,13 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         continueButton = findViewById(R.id.submitButt);
         continueButton.setOnClickListener(this);
 
+        initializeSpinners();
+
+
+    }
+
+    // This function initializes data to language spinners (drop-down menus)
+    public void initializeSpinners() {
         // Initialize spinner menus
         Spinner mainLanguage = (Spinner) findViewById(R.id.mainLangSpin);
         Spinner altLanguage1 = (Spinner) findViewById(R.id.altLang1Spin);
