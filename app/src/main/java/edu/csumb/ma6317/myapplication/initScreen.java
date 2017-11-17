@@ -33,7 +33,6 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
-
     // FirebaseUI sign-in code
     public static final int RC_SIGN_IN = 1;
 
@@ -53,11 +52,11 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
         // Initialize Firebase components
         auth = FirebaseAuth.getInstance();
 
-        //get references to the widgets in activity_init_screen.xml
+        // Get references to the widgets in activity_init_screen.xml
         signInButton = (Button) findViewById(R.id.signInButt);
         contGuestButton = (Button) findViewById(R.id.guestButt);
 
-        //set the click listeners for the buttons
+        // Set the click listeners for the buttons
         signInButton.setOnClickListener(this);
         contGuestButton.setOnClickListener(this);
 
