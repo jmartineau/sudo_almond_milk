@@ -23,18 +23,27 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         continueButton.setOnClickListener(this);
 
         // Initialize spinner menus
-        Spinner languageSpinner = (Spinner) findViewById(R.id.mainLangSpin);
+        Spinner mainLanguage = (Spinner) findViewById(R.id.mainLangSpin);
+        Spinner altLanguage1 = (Spinner) findViewById(R.id.altLang1Spin);
+        Spinner altLanguage2 = (Spinner) findViewById(R.id.altLang2Spin);
+        Spinner altLanguage3 = (Spinner) findViewById(R.id.altLang3Spin);
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.languages_array, android.R.layout.simple_spinner_item);
+        // Create two ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> mainLanguageAdapter = ArrayAdapter.createFromResource(this,
+                R.array.main_languages_array, android.R.layout.simple_spinner_item);
+
+        ArrayAdapter<CharSequence> altLanguageAdapter = ArrayAdapter.createFromResource(this,
+                R.array.alt_languages_array, android.R.layout.simple_spinner_item);
 
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mainLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        altLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Apply the adapter to the spinner
-        languageSpinner.setAdapter(adapter);
-
+        // Apply the adapters to the spinners
+        mainLanguage.setAdapter(mainLanguageAdapter);
+        altLanguage1.setAdapter(altLanguageAdapter);
+        altLanguage2.setAdapter(altLanguageAdapter);
+        altLanguage3.setAdapter(altLanguageAdapter);
     }
 
     public void onClick(View v) {
