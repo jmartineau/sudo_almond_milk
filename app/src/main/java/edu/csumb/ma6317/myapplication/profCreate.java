@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class profCreate extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,6 +24,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         continueButton = findViewById(R.id.submitButt);
         continueButton.setOnClickListener(this);
 
+        initializeSeekBar();
         initializeSpinners();
 
 
@@ -51,6 +54,23 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         altLanguage1.setAdapter(altLanguageAdapter);
         altLanguage2.setAdapter(altLanguageAdapter);
         altLanguage3.setAdapter(altLanguageAdapter);
+    }
+
+    // This function initializes the SeekBar and allows SeekBar changes to update the radius
+    public void initializeSeekBar() {
+        SeekBar radiusSeekBar = (SeekBar) findViewById(R.id.mileRadiusSB);
+        radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            // Update radius TextView when user moves SeekBar
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                TextView radiusText = (TextView) findViewById(R.id.info4Txt);
+                int distance = progress + 10;   // progress starts at 0, so start radius at 10 miles
+                radiusText.setText("I seek translators within " + distance + " miles");
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
     public void onClick(View v) {
