@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Gibber</string>
+
+    <string-array name="alt_languages_array">
+        <item> </item>
+        <item>English</item>
+        <item>French</item>
+        <item>German</item>
+        <item>Japanese</item>
+        <item>Spanish</item>
+    </string-array>
+
+    <string-array name="main_languages_array">
+        <item>English</item>
+        <item>French</item>
+        <item>German</item>
+        <item>Japanese</item>
+        <item>Spanish</item>
+    </string-array>
+
 </resources>
