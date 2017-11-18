@@ -71,7 +71,6 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
                 // User is signed in
                 Intent intent = new Intent(this, profCreate.class);
                 startActivity(intent);
-
             } else {
                 // User is signed out
                 startActivityForResult(
