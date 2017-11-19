@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "edu.csumb.ma6317.myapplication"
@@ -16,6 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {

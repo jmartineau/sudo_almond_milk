@@ -60,9 +60,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("path/geofire");
+        //VIEW PRINT STATEMENTS IN LOGCAT
+//        System.out.println("====PRINT OUT THE MDATABASE REF FROM MAPSACTIVITY.JAVA====");
+//        System.out.println(mDatabaseRef);
         mGeoFire = new GeoFire(mDatabaseRef);
     }
 
+    public DatabaseReference getmDatabaseRef() {
+        return mDatabaseRef;
+    }
+
+    public void setmDatabaseRef(DatabaseReference mDatabaseRef) {
+        this.mDatabaseRef = mDatabaseRef;
+    }
 
     /**
      * Manipulates the map once available.
@@ -75,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //this checks for permission
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -158,7 +169,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
 
-
+        System.out.println("====PRINT OUT THE DISTANCE BETWEEN 2 MARKERS IN MAPSACTIVITY.JAVA====");
+        System.out.println(dist);
         Toast.makeText(getApplicationContext(),
                 "Distance to Santa Cruz: " + dist, Toast.LENGTH_LONG).show();
 
