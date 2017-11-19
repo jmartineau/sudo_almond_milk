@@ -7,8 +7,6 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.LocationListener;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -27,6 +25,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -43,7 +43,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
 
     // GeoFire
+    private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
+    private FirebaseUser mUser;
     private GeoFire mGeoFire;
 
     @Override
@@ -59,7 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("path/geofire");
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         mGeoFire = new GeoFire(mDatabaseRef);
     }
 
@@ -137,7 +141,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
-        mGeoFire.setLocation("firebase-hq", new GeoLocation(location.getLatitude(), location.getLongitude()));
+
+        if (mAuth.getCurrentUser() != null) {
+            String uid = mUser.getUid();
+            mDatabaseRef.child("users").child(uid).child("latidude").setValue(location.getLatitude());            mDatabaseRef.child("users").child(uid).child("latidude").setValue(location.getLatitude());
+            mDatabaseRef.child("users").child(uid).child("longitude").setValue(location.getLongitude());
+
+        }
+        //mGeoFire.setLocation("firebase-hq", new GeoLocation(location.getLatitude(), location.getLongitude()));
 
         double earthRadius = 3958.75;
         double lat2 = 36.9741;
