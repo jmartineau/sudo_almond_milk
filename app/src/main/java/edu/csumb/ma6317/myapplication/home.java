@@ -50,7 +50,18 @@ public class home extends AppCompatActivity {
             // Update radius TextView when user moves SeekBar
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 minutesTextNum = progress + 5;   // progress starts at 0, so start radius at 10 miles
-                minutesText.setText("Within The Next " + minutesTextNum + " Minutes");
+                if (minutesTextNum < 60) {
+                    minutesText.setText("Within The Next " + minutesTextNum + " Minutes");
+                }
+                else if (minutesTextNum == 60) {
+                    minutesText.setText("Within The Next Hour");
+                }
+                else if (minutesTextNum > 60) {
+                    int hrToMin;
+                    hrToMin = minutesTextNum - 60;
+                    minutesText.setText("Within The Next Hour and " + hrToMin + " Minutes");
+                }
+
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {}

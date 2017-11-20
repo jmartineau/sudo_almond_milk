@@ -46,9 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="36dp"
         android:gravity="center"
-        android:text="Within The Next\nX Minutes"
+        android:text="Within The Next 5 Minutes"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintBottom_toTopOf="@+id/minutesAwaySeekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/langRequestSpin"
@@ -58,7 +58,7 @@
         tools:layout_constraintTop_creator="1" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/minutesAwaySeekBar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="29dp"
@@ -98,6 +98,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@+id/minutesAwaySeekBar" />
 
 </android.support.constraint.ConstraintLayout>
