@@ -2,15 +2,13 @@ package edu.csumb.ma6317.myapplication;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
-
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.LocationListener;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,19 +19,29 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
+
+    double lat2 = 36.9741;
+    double lng2 = -122.0308;
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -45,8 +53,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // GeoFire
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
+    private ChildEventListener mChildEventListener;
     private FirebaseUser mUser;
-    private GeoFire mGeoFire;
+
+    private MarkerOptions options = new MarkerOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +73,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        mGeoFire = new GeoFire(mDatabaseRef);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<LatLng> locations = new ArrayList();
+                for(DataSnapshot item_snapshot:dataSnapshot.getChildren()) {
+
+                    Double lat = item_snapshot.child("latitude").getValue(Double.class);
+                    Double lon = item_snapshot.child("longitude").getValue(Double.class);
+
+                    locations.add(new LatLng(lat, lon));
+                }
+                for(LatLng location : locations) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(location)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
     }
 
 
@@ -143,38 +180,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         if (mAuth.getCurrentUser() != null) {
+
             String uid = mUser.getUid();
-            mDatabaseRef.child("users").child(uid).child("latidude").setValue(location.getLatitude());            mDatabaseRef.child("users").child(uid).child("latidude").setValue(location.getLatitude());
-            mDatabaseRef.child("users").child(uid).child("longitude").setValue(location.getLongitude());
-
+            mDatabaseRef.child(uid).child("latitude").setValue(location.getLatitude());
+            mDatabaseRef.child(uid).child("longitude").setValue(location.getLongitude());
         }
-        //mGeoFire.setLocation("firebase-hq", new GeoLocation(location.getLatitude(), location.getLongitude()));
 
-        double earthRadius = 3958.75;
-        double lat2 = 36.9741;
-        double lng2 = -122.0308;
+        double distance = calculateDistance(mLastLocation);
 
-        double dLat = Math.toRadians(location.getLatitude()-lat2);
-        double dLng = Math.toRadians(location.getLongitude()-lng2);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(location.getLatitude())) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double dist = earthRadius * c;
-
-        LatLng latLng2 = new LatLng(lat2, lng2);
-        MarkerOptions markerOptions2 = new MarkerOptions();
-        markerOptions2.position(latLng2);
-        markerOptions2.title("Santa Cruz");
-        markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
-
-
-        Toast.makeText(getApplicationContext(),
-                "Distance to Santa Cruz: " + dist, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(),
+//                "Distance to Santa Cruz: " + distance, Toast.LENGTH_LONG).show();
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng2));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
@@ -186,6 +204,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private  void setMarker(double lat, double longitute) {
+        LatLng latLng2 = new LatLng(lat, longitute);
+
+        MarkerOptions markerOptions2 = new MarkerOptions();
+        markerOptions2.position(latLng2);
+        //markerOptions2.title("Santa Cruz");
+        markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
+    }
+
+    private double calculateDistance(Location location) {
+        double earthRadius = 3958.75;
+
+
+        double dLat = Math.toRadians(location.getLatitude()-lat2);
+        double dLng = Math.toRadians(location.getLongitude()-lng2);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(location.getLatitude())) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = earthRadius * c;
+        return dist;
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
