@@ -13,6 +13,9 @@ public class home extends AppCompatActivity {
     private SeekBar minutesAwaySeekBar;
     private TextView minutesText;
     private int minutesTextNum; // Holds the number of minutes a user would like a translator by
+    private int stepMinute;
+    private int minMinute;
+    private int maxMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,27 +48,40 @@ public class home extends AppCompatActivity {
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius
     private void initializeMinutesAwaySeekBar() {
-        minutesAwaySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        // Read this link to understand the logic of step
+        // https://stackoverflow.com/questions/20762001/how-to-set-seekbar-min-and-max-value
 
-            // Update radius TextView when user moves SeekBar
+        // Set range of the minutesAwaySeekBar here [minMinute, maxMinute]
+        minMinute = 5; // starting minute value
+        maxMinute = 120; // ending minute value
+        stepMinute = 5; // the interval to skip by when user drags seekbar
+
+        minutesAwaySeekBar.setMax( (maxMinute - minMinute) / stepMinute );
+
+        minutesAwaySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            // Update Minutes Away TextView when user moves SeekBar
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                minutesTextNum = progress + 5;   // progress starts at 0, so start radius at 10 miles
+                minutesTextNum = minMinute + (progress * stepMinute);
                 if (minutesTextNum < 60) {
                     minutesText.setText("Within The Next " + minutesTextNum + " Minutes");
                 }
                 else if (minutesTextNum == 60) {
-                    minutesText.setText("Within The Next Hour");
+                    minutesText.setText("Within The Next 1 Hour");
                 }
-                else if (minutesTextNum > 60) {
+                else if (minutesTextNum > 60 && minutesTextNum < 120) {
                     int hrToMin;
                     hrToMin = minutesTextNum - 60;
-                    minutesText.setText("Within The Next Hour and " + hrToMin + " Minutes");
+                    minutesText.setText("Within The Next 1 Hour and " + hrToMin + " Minutes");
                 }
-
+                else if (minutesTextNum == 120) {
+                    minutesText.setText("Within The Next 2 Hours");
+                }
             }
 
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            // Overloaded to do nothing, but needs to be included with SeekBar
+            public void onStartTrackingTouch(SeekBar seekBar) {} //Notification that the user has started a touch gesture.
+            public void onStopTrackingTouch(SeekBar seekBar) {} //Notification that the user has finished a touch gesture.
+
         });
     }
 }
