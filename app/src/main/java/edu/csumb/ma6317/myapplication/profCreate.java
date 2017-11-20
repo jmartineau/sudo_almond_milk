@@ -69,7 +69,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             if (inputValid == true) {
                 sendProfileToDatabase();
                 Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, MapsActivity.class);
+                Intent intent = new Intent(this, home.class);
                 startActivity(intent);
             }
             else {
