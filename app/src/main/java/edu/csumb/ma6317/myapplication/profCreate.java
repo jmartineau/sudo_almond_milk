@@ -39,6 +39,8 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     private Spinner altLanguage2Spinner;
     private Spinner altLanguage3Spinner;
 
+    private SeekBar radiusSeekBar;
+
     private int radius;   // Holds user's desired search radius (in miles)
 
     @Override
@@ -69,7 +71,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             if (inputValid == true) {
                 sendProfileToDatabase();
                 Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, MapsActivity.class);
+                Intent intent = new Intent(this, home.class);
                 startActivity(intent);
             }
             else {
@@ -81,7 +83,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius
     private void initializeSeekBar() {
-        SeekBar radiusSeekBar = (SeekBar) findViewById(R.id.mileRadiusSB);
+        radiusSeekBar = (SeekBar) findViewById(R.id.mileRadiusSB);
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             // Update radius TextView when user moves SeekBar
