@@ -1,14 +1,19 @@
 package edu.csumb.ma6317.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class home extends AppCompatActivity {
-
+public class home extends AppCompatActivity implements View.OnClickListener {
+    private Button profileButton;
+    private Button goButton;
     private Spinner langRequestSpin;
     private SeekBar minutesAwaySeekBar;
     private TextView minutesText;
@@ -23,12 +28,32 @@ public class home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         // Get references to the widgets in activity_home.xml
+        profileButton = (Button) findViewById(R.id.profileButt);
+        goButton = (Button) findViewById(R.id.seekButt);
         langRequestSpin = (Spinner) findViewById(R.id.langRequestSpin);
-        minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
         minutesText = (TextView) findViewById(R.id.info3Txt);
+        minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
+
 
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
+
+        // Set the click listeners for the buttons
+        profileButton.setOnClickListener(this);
+        goButton.setOnClickListener(this);
+    }
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.profileButt) {
+            Toast.makeText(this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, profile.class);
+            //startActivity(intent);
+        }
+        else if (v.getId() == R.id.seekButt) {
+            Toast.makeText(this, "GO Clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, profile.class);
+            //startActivity(intent);
+        }
     }
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml

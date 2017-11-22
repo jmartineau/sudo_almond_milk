@@ -30,8 +30,6 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     private DatabaseReference mDatabase;
     private FirebaseUser mUser;
 
-
-
     // Spinner variables
     private Spinner mainLanguageSpinner;
     private Spinner altLanguage1Spinner;
