@@ -1,5 +1,6 @@
 package edu.csumb.ma6317.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,8 @@ public class home extends AppCompatActivity {
     private int stepMinute;
     private int minMinute;
     private int maxMinute;
+
+    Intent myIntent = new Intent(this, profile.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
