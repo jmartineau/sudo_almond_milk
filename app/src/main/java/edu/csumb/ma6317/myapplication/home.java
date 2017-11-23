@@ -1,14 +1,18 @@
 package edu.csumb.ma6317.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class home extends AppCompatActivity {
+public class home extends AppCompatActivity implements View.OnClickListener{
 
+    private Button goButton;
     private Spinner langRequestSpin;
     private SeekBar minutesAwaySeekBar;
     private TextView minutesText;
@@ -27,8 +31,18 @@ public class home extends AppCompatActivity {
         minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
         minutesText = (TextView) findViewById(R.id.info3Txt);
 
+        goButton = findViewById(R.id.seekButt);
+        goButton.setOnClickListener(this);
+
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
+    }
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.seekButt) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
     }
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
