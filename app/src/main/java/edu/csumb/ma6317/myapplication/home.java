@@ -21,6 +21,7 @@ public class home extends AppCompatActivity implements View.OnClickListener {
     private int stepMinute;
     private int minMinute;
     private int maxMinute;
+    private boolean hasFoundSomeoneAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,9 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         // Set the click listeners for the buttons
         profileButton.setOnClickListener(this);
         goButton.setOnClickListener(this);
+
+        // For testing, set hasFoundSomeoneAvailable here
+        hasFoundSomeoneAvailable = true;
     }
 
     public void onClick(View v) {
@@ -49,10 +53,28 @@ public class home extends AppCompatActivity implements View.OnClickListener {
             Intent intent = new Intent(this, profile.class);
             //startActivity(intent);
         }
+
         else if (v.getId() == R.id.seekButt) {
-            Toast.makeText(this, "GO Clicked", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, profile.class);
-            //startActivity(intent);
+            //TODO: Display "searching...." view
+            //Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(this, successMsg.class);
+//            startActivity(intent);
+
+            //TODO: SUCCESS
+            //User B is a translator, is nearby, and clicked accept request
+            if (hasFoundSomeoneAvailable){
+                Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, successMsg.class);
+                startActivity(intent);
+            }
+            //TODO: FAILURE:
+            //User B clicked decline request, or no one nearby
+            else if (!hasFoundSomeoneAvailable){
+                Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, failMsg.class);
+                startActivity(intent);
+            }
         }
     }
 

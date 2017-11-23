@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-library android:name="com.google.android.maps" />
+
         <activity android:name=".initScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,9 +50,10 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <!--<activity-->
-            <!--android:name=".MapsActivity"-->
-            <!--android:label="@string/title_activity_maps"></activity>-->
+        <!-- <activity -->
+        <!-- android:name=".MapsActivity" -->
+        <!-- android:label="@string/title_activity_maps"></activity> -->
+        <activity android:name=".successMsg"></activity>
     </application>
 
 </manifest>
