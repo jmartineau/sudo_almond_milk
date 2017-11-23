@@ -19,14 +19,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,9 +38,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    double lat2 = 36.9741;
-    double lng2 = -122.0308;
-
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -53,10 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // GeoFire
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
-    private ChildEventListener mChildEventListener;
     private FirebaseUser mUser;
-
-    private MarkerOptions options = new MarkerOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +70,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<LatLng> locations = new ArrayList();
+
+                Double uLat = dataSnapshot.child(mUser.getUid()).child("latitude").getValue(Double.class);
+                Double uLon = dataSnapshot.child(mUser.getUid()).child("longitude").getValue(Double.class);
+                Location uLocation = new Location("");
+                uLocation.setLatitude(uLat);
+                uLocation.setLongitude(uLon);
+
+                int radius = dataSnapshot.child(mUser.getUid()).child("radius").getValue(Integer.class);
+                //Log.d("radius", String.valueOf(radius));
                 for(DataSnapshot item_snapshot:dataSnapshot.getChildren()) {
 
                     Double lat = item_snapshot.child("latitude").getValue(Double.class);
                     Double lon = item_snapshot.child("longitude").getValue(Double.class);
+                    Location gibLocation = new Location("");
+                    gibLocation.setLatitude(lat);
+                    gibLocation.setLongitude(lon);
 
-                    locations.add(new LatLng(lat, lon));
+                    Double distance = calculateDistance(uLocation, gibLocation);
+                    Boolean isGibber = item_snapshot.child("isTranslator").getValue(Boolean.class);
+
+                    // only add users who are translators and are within the specified range
+                    if(lat != uLat && lon != uLon && isGibber && distance <= radius)
+                        locations.add(new LatLng(lat, lon));
                 }
                 for(LatLng location : locations) {
                     mMap.addMarker(new MarkerOptions()
@@ -98,9 +107,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
-
-
 
     }
 
@@ -180,18 +186,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         if (mAuth.getCurrentUser() != null) {
-
             String uid = mUser.getUid();
             mDatabaseRef.child(uid).child("latitude").setValue(location.getLatitude());
             mDatabaseRef.child(uid).child("longitude").setValue(location.getLongitude());
         }
 
-        double distance = calculateDistance(mLastLocation);
-
-//        Toast.makeText(getApplicationContext(),
-//                "Distance to Santa Cruz: " + distance, Toast.LENGTH_LONG).show();
-
-        //move map camera
+        //move map camera to user's current position
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
@@ -204,24 +204,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private  void setMarker(double lat, double longitute) {
-        LatLng latLng2 = new LatLng(lat, longitute);
+    private  void setMarker(double lat, double lon) {
+        LatLng latLng2 = new LatLng(lat, lon);
 
         MarkerOptions markerOptions2 = new MarkerOptions();
         markerOptions2.position(latLng2);
-        //markerOptions2.title("Santa Cruz");
         markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
     }
 
-    private double calculateDistance(Location location) {
+    private double calculateDistance(Location loc1, Location loc2) {
         double earthRadius = 3958.75;
 
 
-        double dLat = Math.toRadians(location.getLatitude()-lat2);
-        double dLng = Math.toRadians(location.getLongitude()-lng2);
+        double dLat = Math.toRadians(loc1.getLatitude()-loc2.getLatitude());
+        double dLng = Math.toRadians(loc1.getLongitude()-loc2.getLongitude());
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(location.getLatitude())) *
+                Math.cos(Math.toRadians(loc2.getLatitude())) * Math.cos(Math.toRadians(loc1.getLatitude())) *
                         Math.sin(dLng/2) * Math.sin(dLng/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         double dist = earthRadius * c;
@@ -294,8 +293,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;
             }
 
-            // other 'case' lines to check for other permissions this app might request.
-            // You can add here other case statements according to your requirement.
         }
     }
 }
