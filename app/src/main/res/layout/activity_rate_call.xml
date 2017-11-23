@@ -9,46 +9,23 @@
 
     <TextView
         android:id="@+id/info1Txt"
-        android:layout_width="wrap_content"
+        android:layout_width="262dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginLeft="84dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="36dp"
-        android:text="Please Rate"
+        android:text="Please Rate Your Translator"
+        android:textAlignment="center"
         android:textSize="40sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/info2Txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginLeft="148dp"
-        android:layout_marginTop="92dp"
-        android:text="Your"
-        android:textSize="40sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/info3Txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
-        android:layout_marginLeft="92dp"
-        android:layout_marginTop="148dp"
-        android:text="Translator:"
-        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-        <!--
-            android:orientation
-                Should the layout be a column or a row?
-                Use "horizontal" for a row, "vertical" for a column.
-        -->
+    <!--
+        android:orientation
+            Should the layout be a column or a row?
+            Use "horizontal" for a row, "vertical" for a column.
+    -->
     <RadioGroup
         android:id="@+id/rg"
         android:layout_width="wrap_content"
@@ -56,12 +33,13 @@
         android:layout_below="@+id/info3Txt"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="64dp"
         android:orientation="horizontal"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/info3Txt">
+        app:layout_constraintTop_toBottomOf="@+id/info1Txt">
 
         <RadioButton
             android:id="@+id/star1"
@@ -102,12 +80,14 @@
     <TextView
         android:id="@+id/info4Txt"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="312dp"
-        android:text="Comments And Feedback"
-        android:textSize="30sp"
+        android:layout_height="86dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="336dp"
+        android:text="Leave comments and feedback below:"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,17 +95,21 @@
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginLeft="84dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
         android:ems="10"
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/info4Txt" />
 
     <Button
         android:id="@+id/submitButt"
         android:layout_width="192dp"
-        android:layout_height="96dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="16dp"
         android:text="Submit"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +118,8 @@
     <Button
         android:id="@+id/notNowButt"
         android:layout_width="192dp"
-        android:layout_height="96dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="16dp"
         android:text="Not Now"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
