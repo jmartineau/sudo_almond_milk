@@ -44,7 +44,7 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         goButton.setOnClickListener(this);
 
         // For testing, set hasFoundSomeoneAvailable here
-        hasFoundSomeoneAvailable = true;
+        hasFoundSomeoneAvailable = false;
     }
 
     public void onClick(View v) {
@@ -56,10 +56,6 @@ public class home extends AppCompatActivity implements View.OnClickListener {
 
         else if (v.getId() == R.id.seekButt) {
             //TODO: Display "searching...." view
-            //Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(this, successMsg.class);
-//            startActivity(intent);
 
             //TODO: SUCCESS
             //User B is a translator, is nearby, and clicked accept request
