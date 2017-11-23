@@ -77,10 +77,10 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
 
     public boolean onLongClick(View v) {
         // oops! I broke the code, but I'll fix it soon!
-//        if (v.getId() == R.id.seekButt) {
-//            Intent intent = new Intent(this, MapsActivity.class);
-//            startActivity(intent);
-//        }
+        if (v.getId() == R.id.seekButt) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
         return true;
     }
 
