@@ -28,11 +28,13 @@ public class failMsg extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void onClick(View v) {
+        //TODO: Search again logic here
         if (v.getId() == R.id.tryAgainButt) {
             Toast.makeText(this, "Try Again", Toast.LENGTH_SHORT).show();
 //            Intent intent = new Intent(this, rateCall.class);
 //            startActivity(intent);
         }
+        // Go back to Home page
         else if (v.getId() == R.id.cancelButton) {
             Toast.makeText(this, "Go back home", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, home.class);

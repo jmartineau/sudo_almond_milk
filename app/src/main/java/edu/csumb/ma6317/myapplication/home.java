@@ -44,7 +44,7 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         goButton.setOnClickListener(this);
 
         // For testing, set hasFoundSomeoneAvailable here
-        hasFoundSomeoneAvailable = false;
+        hasFoundSomeoneAvailable = true;
     }
 
     public void onClick(View v) {
