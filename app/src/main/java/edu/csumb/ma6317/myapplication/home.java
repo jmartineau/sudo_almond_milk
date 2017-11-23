@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class home extends AppCompatActivity implements View.OnClickListener{
+public class home extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private Button goButton;
+    private Button profileButton;
     private Spinner langRequestSpin;
     private SeekBar minutesAwaySeekBar;
     private TextView minutesText;
@@ -20,6 +22,7 @@ public class home extends AppCompatActivity implements View.OnClickListener{
     private int stepMinute;
     private int minMinute;
     private int maxMinute;
+    private boolean hasFoundSomeoneAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,22 +30,57 @@ public class home extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_home);
 
         // Get references to the widgets in activity_home.xml
+        profileButton = (Button) findViewById(R.id.profileButt);
+        goButton = (Button) findViewById(R.id.seekButt);
         langRequestSpin = (Spinner) findViewById(R.id.langRequestSpin);
-        minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
         minutesText = (TextView) findViewById(R.id.info3Txt);
-
-        goButton = findViewById(R.id.seekButt);
-        goButton.setOnClickListener(this);
+        minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
 
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
+
+        // Set the click listeners for the buttons
+        profileButton.setOnClickListener(this);
+        goButton.setOnClickListener(this);
+        goButton.setOnLongClickListener(this);
+
+        // For testing, set hasFoundSomeoneAvailable here
+        hasFoundSomeoneAvailable = true;
     }
 
     public void onClick(View v) {
+        if (v.getId() == R.id.profileButt) {
+            Toast.makeText(this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, profile.class);
+            //startActivity(intent);
+        }
+
+        else if (v.getId() == R.id.seekButt) {
+            //TODO: Display "searching...." view
+
+            //TODO: SUCCESS
+            //User B is a translator, is nearby, and clicked accept request
+            if (hasFoundSomeoneAvailable){
+                Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, successMsg.class);
+                startActivity(intent);
+            }
+            //TODO: FAILURE:
+            //User B clicked decline request, or no one nearby
+            else if (!hasFoundSomeoneAvailable){
+                Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, failMsg.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    public boolean onLongClick(View v) {
         if (v.getId() == R.id.seekButt) {
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
         }
+        return true;
     }
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
@@ -56,7 +94,7 @@ public class home extends AppCompatActivity implements View.OnClickListener{
         mainLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapters to the spinners
         langRequestSpin.setAdapter(mainLanguageAdapter);
-        //Should return true if sucessfully initialized to a default string value (English)
+        //Should return true if successfully initialized to a default string value (English)
         return (langRequestSpin.getSelectedItem().toString() != null);
     }
 

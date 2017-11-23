@@ -30,18 +30,22 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     private DatabaseReference mDatabase;
     private FirebaseUser mUser;
 
-    // Button variables
-    private Button continueButton;
-
     // Spinner variables
     private Spinner mainLanguageSpinner;
     private Spinner altLanguage1Spinner;
     private Spinner altLanguage2Spinner;
     private Spinner altLanguage3Spinner;
 
+    private TextView radiusText;
     private SeekBar radiusSeekBar;
 
-    private int radius;   // Holds user's desired search radius (in miles)
+    private int radiusTextNum;   // Holds user's desired search radius (in miles)
+    private int stepRadius;
+    private int minRadius;
+    private int maxRadius;
+
+    // Button variables
+    private Button continueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +57,22 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Set the click listeners for the button
+
+        // Get references to the widgets in activity_prof_create.xml
+        mainLanguageSpinner = (Spinner) findViewById(R.id.mainLangSpin);
+        altLanguage1Spinner = (Spinner) findViewById(R.id.altLang1Spin);
+        altLanguage2Spinner = (Spinner) findViewById(R.id.altLang2Spin);
+        altLanguage3Spinner = (Spinner) findViewById(R.id.altLang3Spin);
+        radiusText = (TextView) findViewById(R.id.info4Txt);
+        radiusSeekBar = (SeekBar) findViewById(R.id.mileRadiusSB);
         continueButton = findViewById(R.id.submitButt);
+
+        // Set the click listeners for the button
         continueButton.setOnClickListener(this);
 
         // Initialize form elements
         initializeSpinners();
         initializeSeekBar();
-        radius = 10;  // Set default value if user doesn't move SeekBar
     }
 
     public void onClick(View v) {
@@ -83,14 +95,21 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius
     private void initializeSeekBar() {
-        radiusSeekBar = (SeekBar) findViewById(R.id.mileRadiusSB);
-        radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
+        // Read this link to understand the logic of step
+        // https://stackoverflow.com/questions/20762001/how-to-set-seekbar-min-and-max-value
+
+        // Set range of the minutesAwaySeekBar here [minMinute, maxMinute]
+        minRadius = 10; // lower bound radius miles value
+        maxRadius = 100; // upper bound radius miles value
+        stepRadius = 10; // the interval to skip by when user drags seekbar
+        radiusSeekBar.setMax( (maxRadius - minRadius) / stepRadius );
+
+        radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             // Update radius TextView when user moves SeekBar
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                TextView radiusText = (TextView) findViewById(R.id.info4Txt);
-                radius = progress + 10;   // progress starts at 0, so start radius at 10 miles
-                radiusText.setText("I seek translators within " + radius + " miles");
+                radiusTextNum = minRadius + (progress * stepRadius);
+                radiusText.setText("I seek translators within " + radiusTextNum + " miles");
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -100,11 +119,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
 
     // Initializes data to language Spinners (drop-down menus)
     private void initializeSpinners() {
-        // Initialize spinner menus
-        mainLanguageSpinner = (Spinner) findViewById(R.id.mainLangSpin);
-        altLanguage1Spinner = (Spinner) findViewById(R.id.altLang1Spin);
-        altLanguage2Spinner = (Spinner) findViewById(R.id.altLang2Spin);
-        altLanguage3Spinner = (Spinner) findViewById(R.id.altLang3Spin);
+
 
         // Create two ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> mainLanguageAdapter = ArrayAdapter.createFromResource(this,
@@ -156,7 +171,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             mDatabase.child("users").child(uid).child("rating").setValue(-1);
             mDatabase.child("users").child(uid).child("languages").setValue(userLanguages);
             mDatabase.child("users").child(uid).child("isTranslator").setValue(isTranslator);
-            mDatabase.child("users").child(uid).child("radius").setValue(radius);
+            mDatabase.child("users").child(uid).child("radius").setValue(radiusTextNum);
         }
         // User is a guest
         else {
@@ -167,7 +182,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             String guestValue = Integer.toString(guestNum);
             mDatabase.child("guests").child(guestValue).child("languages").setValue(userLanguages);
             mDatabase.child("guests").child(guestValue).child("isTranslator").setValue(isTranslator);
-            mDatabase.child("guests").child(guestValue).child("radius").setValue(radius);
+            mDatabase.child("guests").child(guestValue).child("radius").setValue(radiusTextNum);
         }
 
         return true;
