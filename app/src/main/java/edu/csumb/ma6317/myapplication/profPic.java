@@ -43,6 +43,7 @@ public class profPic extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 42069;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 69420;
     private ProgressDialog mProgressDialog;
+    Intent myIntent = new Intent(this, profile.class);
 
     private StorageReference mStorageRef;
     private FirebaseAuth fAuth;
@@ -60,12 +61,19 @@ public class profPic extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener(){
             public void onClick (View v) {
                 // Code here executes on main thread after user presses button
+                startActivity(myIntent);
+            }
+
+        });
+        final Button button2 = findViewById(R.id.cancelButt);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick (View v) {
+                // Code here executes on main thread after user presses button
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
             }
-
         });
 
         if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
