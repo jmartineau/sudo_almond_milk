@@ -11,9 +11,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class home extends AppCompatActivity implements View.OnClickListener {
-    private Button profileButton;
+public class home extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+
     private Button goButton;
+    private Button profileButton;
     private Spinner langRequestSpin;
     private SeekBar minutesAwaySeekBar;
     private TextView minutesText;
@@ -35,13 +36,13 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         minutesText = (TextView) findViewById(R.id.info3Txt);
         minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
 
-
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
 
         // Set the click listeners for the buttons
         profileButton.setOnClickListener(this);
         goButton.setOnClickListener(this);
+        goButton.setOnLongClickListener(this);
 
         // For testing, set hasFoundSomeoneAvailable here
         hasFoundSomeoneAvailable = true;
@@ -74,6 +75,14 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    public boolean onLongClick(View v) {
+        if (v.getId() == R.id.seekButt) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
+        return true;
+    }
+
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
     private boolean initializeLangRequestSpinner() {
         // Create two ArrayAdapter using the string array and a default spinner layout
@@ -85,7 +94,7 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         mainLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapters to the spinners
         langRequestSpin.setAdapter(mainLanguageAdapter);
-        //Should return true if sucessfully initialized to a default string value (English)
+        //Should return true if successfully initialized to a default string value (English)
         return (langRequestSpin.getSelectedItem().toString() != null);
     }
 
