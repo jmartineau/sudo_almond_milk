@@ -43,7 +43,6 @@ public class profPic extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 42069;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 69420;
     private ProgressDialog mProgressDialog;
-    Intent myIntent = new Intent(this, profile.class);
 
     private StorageReference mStorageRef;
     private FirebaseAuth fAuth;
@@ -57,6 +56,7 @@ public class profPic extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        final Intent myIntent = new Intent(this, profile.class);
         final Button button1 = findViewById(R.id.updatePicButt);
         button1.setOnClickListener(new View.OnClickListener(){
             public void onClick (View v) {
@@ -89,6 +89,7 @@ public class profPic extends AppCompatActivity {
             return;
         }
 
+        //Can also use firebase id instead for pathing name
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
             //for now the personId will be used to differentiate accounts
@@ -163,8 +164,7 @@ public class profPic extends AppCompatActivity {
             else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 return getDataColumn(context, contentUri, null, null);
             }
