@@ -3,7 +3,9 @@ package edu.csumb.ma6317.myapplication;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,7 +20,6 @@ public class home extends AppCompatActivity {
     private int minMinute;
     private int maxMinute;
 
-    Intent myIntent = new Intent(this, profile.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,14 @@ public class home extends AppCompatActivity {
 
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
+
+        final Intent myIntent = new Intent(this, profile.class);
+        Button buttn = findViewById(R.id.profileButt);
+        buttn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(myIntent);
+            }
+        });
     }
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
