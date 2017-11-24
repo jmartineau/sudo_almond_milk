@@ -7,7 +7,7 @@
     tools:context="edu.csumb.ma6317.myapplication.profPic">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/updateImg"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="92dp"
@@ -18,7 +18,7 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/updatePicButt"
         android:layout_width="357dp"
         android:layout_height="91dp"
         android:layout_marginStart="12dp"
@@ -27,17 +27,16 @@
         android:text="Update Profile\nPicture From Gallery"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/updateImg" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/cancelButt"
         android:layout_width="357dp"
         android:layout_height="53dp"
         android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
         android:layout_marginTop="24dp"
         android:text="Cancel"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/updatePicButt" />
 </android.support.constraint.ConstraintLayout>
