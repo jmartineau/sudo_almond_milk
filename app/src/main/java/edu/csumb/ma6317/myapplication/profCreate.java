@@ -78,17 +78,19 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.submitButt) {
             // Verify user input
-            boolean inputValid = validateInput();
-
-            if (inputValid == true) {
-                sendProfileToDatabase();
-                Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, home.class);
-                startActivity(intent);
-            }
-            else {
-                showErrorMessage();
-            }
+            Intent myIntent = new Intent(this, profPic.class);
+            startActivity(myIntent);
+//            boolean inputValid = validateInput();
+//
+//            if (inputValid == true) {
+//                sendProfileToDatabase();
+//                Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(this, home.class);
+//                startActivity(intent);
+//            }
+//            else {
+//                showErrorMessage();
+//            }
 
         }
     }

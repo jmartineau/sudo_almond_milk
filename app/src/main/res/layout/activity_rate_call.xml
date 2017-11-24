@@ -11,7 +11,6 @@
         android:id="@+id/info1Txt"
         android:layout_width="262dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="36dp"
         android:text="Please Rate Your Translator"
         android:textAlignment="center"
