@@ -8,7 +8,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class profile extends AppCompatActivity implements View.OnClickListener {
+
+    // Firebase instance variables
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseRef;
+    private FirebaseUser mUser;
 
     // Widget variables
     private ImageView img;
@@ -29,6 +42,21 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         img.setOnClickListener(this);
         addLangButton.setOnClickListener(this);
         deleteLangButton.setOnClickListener(this);
+
+        // Read from Firebase database
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void onClick(View v) {
