@@ -48,6 +48,10 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         hasFoundSomeoneAvailable = true;
     }
 
+    public int add(int a, int b) {
+        return a+b;
+    }
+
     public void onClick(View v) {
         if (v.getId() == R.id.profileButt) {
             Toast.makeText(this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
