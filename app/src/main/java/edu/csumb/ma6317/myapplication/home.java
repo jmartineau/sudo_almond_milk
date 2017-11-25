@@ -11,6 +11,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class home extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private Button goButton;
@@ -23,6 +28,10 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
     private int minMinute;
     private int maxMinute;
     private boolean hasFoundSomeoneAvailable;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,10 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
 
         // For testing, set hasFoundSomeoneAvailable here
         hasFoundSomeoneAvailable = true;
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
     }
 
     public int add(int a, int b) {
@@ -80,7 +93,9 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
     }
 
     public boolean onLongClick(View v) {
-        // oops! I broke the code, but I'll fix it soon!
+
+        requestLanguage();
+
         if (v.getId() == R.id.seekButt) {
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
@@ -101,6 +116,14 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         langRequestSpin.setAdapter(mainLanguageAdapter);
         //Should return true if successfully initialized to a default string value (English)
         return (langRequestSpin.getSelectedItem().toString() != null);
+    }
+
+    // user selects the language that they need a translator for and gets sent to firebase
+    private void requestLanguage(){
+        String uid = mUser.getUid();
+        String reqLanguage = langRequestSpin.getSelectedItem().toString();
+        mDatabase.child("users").child(uid).child("requestLanguage").setValue(reqLanguage);
+
     }
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius

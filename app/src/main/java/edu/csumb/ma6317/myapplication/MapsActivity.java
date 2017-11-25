@@ -32,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -73,6 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Double uLat = dataSnapshot.child(mUser.getUid()).child("latitude").getValue(Double.class);
                 Double uLon = dataSnapshot.child(mUser.getUid()).child("longitude").getValue(Double.class);
+                String reqLang = dataSnapshot.child(mUser.getUid()).child("requestLanguage").getValue(String.class);
+                String mainLang = dataSnapshot.child(mUser.getUid()).child("languages/0").getValue(String.class);
                 Location uLocation = new Location("");
                 uLocation.setLatitude(uLat);
                 uLocation.setLongitude(uLon);
@@ -89,9 +93,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     Double distance = calculateDistance(uLocation, gibLocation);
                     Boolean isGibber = item_snapshot.child("isTranslator").getValue(Boolean.class);
+                    Set<String> language = new HashSet<>();
+                    for(int i = 0; i < 4; i++) {
+                        if(item_snapshot.child("languages/" + i).getValue(String.class) != null) {
+                            Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
+
+                            Log.d("language", String.valueOf(item_snapshot.child("languages/" + i).getValue(String.class)));
+                            language.add(item_snapshot.child("languages/" + i).getValue(String.class));
+                        } else
+                            break;
+                    }
 
                     // only add users who are translators and are within the specified range
-                    if(lat != uLat && lon != uLon && isGibber && distance <= radius)
+                    if(lat != uLat && lon != uLon && isGibber && distance <= radius &&
+                            language.contains(mainLang) && language.contains(reqLang))
                         locations.add(new LatLng(lat, lon));
                 }
                 for(LatLng location : locations) {
