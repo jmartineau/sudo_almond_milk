@@ -213,7 +213,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
     }
 
-    private double calculateDistance(Location loc1, Location loc2) {
+    public double calculateDistance(Location loc1, Location loc2) {
         double earthRadius = 3958.75;
 
 
