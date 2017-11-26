@@ -67,9 +67,8 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
 
     public void onClick(View v) {
         if (v.getId() == R.id.profileButt) {
-            Toast.makeText(this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, profile.class);
-            //startActivity(intent);
+            startActivity(intent);
         }
 
         else if (v.getId() == R.id.seekButt) {

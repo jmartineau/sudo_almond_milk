@@ -18,7 +18,7 @@
         android:textSize="48sp" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/updateImg"
         android:layout_width="match_parent"
         android:layout_height="123dp"
         app:srcCompat="@android:drawable/btn_star_big_on"
