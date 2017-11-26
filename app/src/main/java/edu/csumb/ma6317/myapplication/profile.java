@@ -31,6 +31,7 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
 
     // Widget variables
     private TextView usernameText;
+    private TextView languagesText;
     private ImageView img;
     private Button addLangButton;
     private Button deleteLangButton;
@@ -42,6 +43,7 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
 
         // Get references to the widgets in activity_profile.xml
         usernameText = (TextView) findViewById(R.id.usernameTxt);
+        languagesText = (TextView) findViewById(R.id.langListTxt);
         img = (ImageView) findViewById(R.id.userPicImg);
         addLangButton = (Button) findViewById(R.id.addLangButt);
         deleteLangButton = (Button) findViewById(R.id.deleteLangButt);
@@ -94,6 +96,14 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
     }
 
     private boolean displayProfileInfo(String displayName, List languages) {
+        if (displayName == null || languages == null) {
+            return false;
+        }
+
+        languagesText.setText("");
+        for (Object language : languages) {
+            languagesText.append(language + "\n");
+        }
         usernameText.setText(displayName);
 
         return true;
