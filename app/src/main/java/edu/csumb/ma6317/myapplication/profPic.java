@@ -1,6 +1,5 @@
 package edu.csumb.ma6317.myapplication;
 
-import android.*;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -17,23 +16,26 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.module.AppGlideModule;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
+import java.io.InputStream;
 
 public class profPic extends AppCompatActivity {
 
@@ -43,9 +45,12 @@ public class profPic extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 42069;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 69420;
     private ProgressDialog mProgressDialog;
+    private ImageView myImg1;
+    private Button button1; //change profile pic button
+    private Button button2; //cancel button
 
     private StorageReference mStorageRef;
-    private FirebaseAuth fAuth;
+    private StorageReference glStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +58,19 @@ public class profPic extends AppCompatActivity {
         setContentView(R.layout.activity_prof_pic);
 
         mProgressDialog = new ProgressDialog(profPic.this);
-        fAuth = FirebaseAuth.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        myImg1 = findViewById(R.id.updateImg);
         final Intent myIntent = new Intent(this, profile.class);
-        final Button button1 = findViewById(R.id.updatePicButt);
-        button1.setOnClickListener(new View.OnClickListener(){
+        button1 = findViewById(R.id.updatePicButt);
+        button2 = findViewById(R.id.cancelButt);
+        button2.setOnClickListener(new View.OnClickListener(){
             public void onClick (View v) {
                 // Code here executes on main thread after user presses button
                 startActivity(myIntent);
             }
 
         });
-        final Button button2 = findViewById(R.id.cancelButt);
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick (View v) {
                 // Code here executes on main thread after user presses button
@@ -98,8 +103,15 @@ public class profPic extends AppCompatActivity {
             //String personGivenName = acct.getGivenName();
             //String personFamilyName = acct.getFamilyName();
             //String personEmail = acct.getEmail();
+            //String personId = acct.getId(); Has strange return val
             personId = acct.getId();
             //Uri personPhoto = acct.getPhotoUrl();
+        }
+        if (personId != "trash") {
+            glStorageRef = FirebaseStorage.getInstance().getReference("images/users/" + personId + ".jpg");
+            GlideApp.with(this).load(glStorageRef).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(myImg1);
+        } else {
+            Glide.with(this).load("https://cdn.pixabay.com/photo/2012/04/12/20/12/x-30465_960_720.png").into(myImg1);
         }
     }
 
@@ -111,9 +123,8 @@ public class profPic extends AppCompatActivity {
                 selectedImagePath = getPath(this, selectedImageUri);
                 System.out.println(selectedImagePath);
 
-                //ImageView myImg1 = findViewById(R.id.mainImg);
                 Bitmap myBitmap = BitmapFactory.decodeFile(selectedImagePath);
-                //myImg1.setImageBitmap(myBitmap);
+                myImg1.setImageBitmap(myBitmap);
 
                 mProgressDialog.setMessage("Saving Image...");
                 mProgressDialog.show();
@@ -159,6 +170,7 @@ public class profPic extends AppCompatActivity {
                 }
 
                 // TODO handle non-primary volumes
+                // not sure what this to.do means but the app is working so I will ignore for now :D -cullen
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
@@ -262,3 +274,4 @@ public class profPic extends AppCompatActivity {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 }
+
