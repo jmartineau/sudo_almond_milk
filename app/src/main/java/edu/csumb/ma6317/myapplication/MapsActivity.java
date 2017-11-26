@@ -72,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<LatLng> locations = new ArrayList();
+                ArrayList<String> userNames = new ArrayList<>();
 
                 Double uLat = dataSnapshot.child(mUser.getUid()).child("latitude").getValue(Double.class);
                 Double uLon = dataSnapshot.child(mUser.getUid()).child("longitude").getValue(Double.class);
@@ -94,11 +95,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Double distance = calculateDistance(uLocation, gibLocation);
                     Boolean isGibber = item_snapshot.child("isTranslator").getValue(Boolean.class);
                     Set<String> language = new HashSet<>();
+
                     for(int i = 0; i < 4; i++) {
                         if(item_snapshot.child("languages/" + i).getValue(String.class) != null) {
-                            Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
-
-                            Log.d("language", String.valueOf(item_snapshot.child("languages/" + i).getValue(String.class)));
+                            //Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
+                            userNames.add(item_snapshot.child("displayName").getValue(String.class));
                             language.add(item_snapshot.child("languages/" + i).getValue(String.class));
                         } else
                             break;
@@ -109,10 +110,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             language.contains(mainLang) && language.contains(reqLang))
                         locations.add(new LatLng(lat, lon));
                 }
+                int i = 0;
                 for(LatLng location : locations) {
-                    mMap.addMarker(new MarkerOptions()
+                    Marker marker =  mMap.addMarker(new MarkerOptions()
+                            .title(userNames.get(i))
                             .position(location)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                    marker.showInfoWindow();
+                    i++;
                 }
 
             }
