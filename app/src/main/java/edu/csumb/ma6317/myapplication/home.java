@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class home extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+public class home extends AppCompatActivity implements View.OnClickListener {
 
     private Button goButton;
     private Button profileButton;
@@ -51,7 +51,6 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         // Set the click listeners for the buttons
         profileButton.setOnClickListener(this);
         goButton.setOnClickListener(this);
-        goButton.setOnLongClickListener(this);
 
         // For testing, set hasFoundSomeoneAvailable here
         hasFoundSomeoneAvailable = true;
@@ -73,35 +72,13 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         }
 
         else if (v.getId() == R.id.seekButt) {
-            //TODO: Display "searching...." view
-
-            //TODO: SUCCESS
-            //User B is a translator, is nearby, and clicked accept request
-            if (hasFoundSomeoneAvailable){
-                Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, successMsg.class);
-                startActivity(intent);
-            }
-            //TODO: FAILURE:
-            //User B clicked decline request, or no one nearby
-            else if (!hasFoundSomeoneAvailable){
-                Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, failMsg.class);
-                startActivity(intent);
-            }
-        }
-    }
-
-    public boolean onLongClick(View v) {
-
-        requestLanguage();
-
-        if (v.getId() == R.id.seekButt) {
+            requestLanguage();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
+
         }
-        return true;
     }
+
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
     private boolean initializeLangRequestSpinner() {
