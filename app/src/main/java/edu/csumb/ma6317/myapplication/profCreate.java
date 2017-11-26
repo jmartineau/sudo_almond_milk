@@ -78,6 +78,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.submitButt) {
             // Verify user input
+
             boolean inputValid = validateInput();
 
             if (inputValid == true) {
