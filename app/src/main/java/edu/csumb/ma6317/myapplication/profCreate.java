@@ -89,7 +89,6 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             else {
                 showErrorMessage();
             }
-
         }
     }
 
