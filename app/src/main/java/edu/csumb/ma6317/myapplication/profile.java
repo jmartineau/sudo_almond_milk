@@ -8,14 +8,12 @@ import android.widget.ImageView;
 
 public class profile extends AppCompatActivity {
 
-
-    Intent myIntent = new Intent(this, profPic.class);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        final Intent myIntent = new Intent(this, profPic.class);
         ImageView img = (ImageView) findViewById(R.id.userPicImg);
         img.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

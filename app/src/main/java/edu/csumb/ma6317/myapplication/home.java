@@ -21,8 +21,6 @@ public class home extends AppCompatActivity {
     private int minMinute;
     private int maxMinute;
 
-    Intent myIntent = new Intent(this, profile.class);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +33,8 @@ public class home extends AppCompatActivity {
 
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
+
+        final Intent myIntent = new Intent(this, profile.class);
 
         Button buttn = findViewById(R.id.profileButt);
         buttn.setOnClickListener(new View.OnClickListener() {
