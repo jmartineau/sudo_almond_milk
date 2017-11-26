@@ -70,6 +70,14 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
         signInButton.setOnClickListener(this);
         contGuestButton.setOnClickListener(this);
 
+        // Check if user exists in onCreate()
+        // If done in onClick(), there's not enough time to process result before activity change
+        if (mAuth.getCurrentUser() != null) {
+            // User is signed in, check if they exist in database
+            mUser = mAuth.getCurrentUser();
+            checkUserExists(mUser);
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -80,22 +88,7 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
             if (mAuth.getCurrentUser() != null) {
                 // User is signed in, check if they exist in database
                 mUser = mAuth.getCurrentUser();
-                mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-                mDatabaseRef.child("users").child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            // Handle the case where the data already exists
-                            initScreen.userExists = true;
-                        }
-                        else {
-                            // Handle the case where the data does not yet exist
-                            initScreen.userExists = false;
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {}
-                });
+                checkUserExists(mUser);
                 if (initScreen.userExists) {
                     Intent intent = new Intent(this, home.class);
                     startActivity(intent);
@@ -143,6 +136,25 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+    }
+
+    public void checkUserExists(FirebaseUser mUser) {
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getUid());
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Handle the case where the data already exists
+                    initScreen.userExists = true;
+                }
+                else {
+                    // Handle the case where the data does not yet exist
+                    initScreen.userExists = false;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     @Override
