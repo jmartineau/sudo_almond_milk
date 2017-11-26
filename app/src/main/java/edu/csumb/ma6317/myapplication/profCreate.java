@@ -168,7 +168,9 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             String displayName = mUser.getDisplayName();
 
             mDatabase.child("users").child(uid).child("displayName").setValue(displayName);
-            mDatabase.child("users").child(uid).child("rating").setValue(-1);
+            mDatabase.child("users").child(uid).child("ratingAverage").setValue(5);
+            mDatabase.child("users").child(uid).child("ratingSum").setValue(5);
+            mDatabase.child("users").child(uid).child("ratingCount").setValue(1);
             mDatabase.child("users").child(uid).child("languages").setValue(userLanguages);
             mDatabase.child("users").child(uid).child("isTranslator").setValue(isTranslator);
             mDatabase.child("users").child(uid).child("radius").setValue(radiusTextNum);
