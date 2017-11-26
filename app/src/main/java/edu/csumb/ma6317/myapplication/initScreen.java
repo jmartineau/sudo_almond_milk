@@ -21,6 +21,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
@@ -36,8 +42,12 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
     // FirebaseUI sign-in code
     public static final int RC_SIGN_IN = 1;
 
+    public static boolean userExists;
+
     // Firebase instance variables
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseRef;
+    private FirebaseUser mUser;
     private FirebaseAuth.AuthStateListener authStateListener;
 
     // Button variables
@@ -68,9 +78,32 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.signInButt) {
             if (mAuth.getCurrentUser() != null) {
-                // User is signed in
-                Intent intent = new Intent(this, profCreate.class);
-                startActivity(intent);
+                // User is signed in, check if they exist in database
+                mUser = mAuth.getCurrentUser();
+                mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+                mDatabaseRef.child("users").child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Handle the case where the data already exists
+                            initScreen.userExists = true;
+                        }
+                        else {
+                            // Handle the case where the data does not yet exist
+                            initScreen.userExists = false;
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+                if (initScreen.userExists) {
+                    Intent intent = new Intent(this, home.class);
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(this, profCreate.class);
+                    startActivity(intent);
+                }
             } else {
                 // User is signed out
                 startActivityForResult(
