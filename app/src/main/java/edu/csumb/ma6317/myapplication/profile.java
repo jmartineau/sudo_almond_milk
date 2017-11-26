@@ -88,9 +88,8 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
             //startActivity(intent);
         }
         else if (v.getId() == R.id.editProfileButt) {
-            Toast.makeText(this, "Edit Profile Button Clicked", Toast.LENGTH_SHORT).show();
-            //Intent intent = new Intent(this, profEdit.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, profEdit.class);
+            startActivity(intent);
         }
         else if (v.getId() == R.id.translationLogButt) {
             Toast.makeText(this, "Translation Log Button Clicked", Toast.LENGTH_SHORT).show();
