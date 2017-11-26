@@ -34,8 +34,8 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
     private TextView usernameText;
     private TextView languagesText;
     private ImageView img;
-    private Button addLangButton;
-    private Button deleteLangButton;
+    private Button editProfileButton;
+    private Button translationLogButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +46,13 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         usernameText = (TextView) findViewById(R.id.usernameTxt);
         languagesText = (TextView) findViewById(R.id.langListTxt);
         img = (ImageView) findViewById(R.id.userPicImg);
-        addLangButton = (Button) findViewById(R.id.addLangButt);
-        deleteLangButton = (Button) findViewById(R.id.deleteLangButt);
+        editProfileButton = (Button) findViewById(R.id.editProfileButt);
+        translationLogButton = (Button) findViewById(R.id.translationLogButt);
 
         // Set the click listeners for the buttons
         img.setOnClickListener(this);
-        addLangButton.setOnClickListener(this);
-        deleteLangButton.setOnClickListener(this);
+        editProfileButton.setOnClickListener(this);
+        translationLogButton.setOnClickListener(this);
 
         // Implement scrolling for languages TextView
         languagesText.setMovementMethod(new ScrollingMovementMethod());
@@ -87,14 +87,14 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
             Intent intent = new Intent(this, profPic.class);
             //startActivity(intent);
         }
-        else if (v.getId() == R.id.addLangButt) {
-            Toast.makeText(this, "Add Language Button Clicked", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, addLang.class);
+        else if (v.getId() == R.id.editProfileButt) {
+            Toast.makeText(this, "Edit Profile Button Clicked", Toast.LENGTH_SHORT).show();
+            //Intent intent = new Intent(this, profEdit.class);
             //startActivity(intent);
         }
-        else if (v.getId() == R.id.deleteLangButt) {
-            Toast.makeText(this, "Delete Language Button Clicked", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, deleteLang.class);
+        else if (v.getId() == R.id.translationLogButt) {
+            Toast.makeText(this, "Translation Log Button Clicked", Toast.LENGTH_SHORT).show();
+            //Intent intent = new Intent(this, translationLog.class);
             //startActivity(intent);
         }
     }
