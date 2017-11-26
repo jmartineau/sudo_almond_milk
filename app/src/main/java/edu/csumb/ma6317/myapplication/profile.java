@@ -83,9 +83,8 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
 
     public void onClick(View v) {
         if (v.getId() == R.id.userPicImg) {
-            Toast.makeText(this, "Image Button Clicked", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, profPic.class);
-            //startActivity(intent);
+            startActivity(intent);
         }
         else if (v.getId() == R.id.editProfileButt) {
             Intent intent = new Intent(this, profEdit.class);
