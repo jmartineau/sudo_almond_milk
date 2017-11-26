@@ -103,6 +103,7 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
         minRadius = 10; // lower bound radius miles value
         maxRadius = 100; // upper bound radius miles value
         stepRadius = 10; // the interval to skip by when user drags seekbar
+        radiusTextNum = minRadius;
         radiusSeekBar.setMax( (maxRadius - minRadius) / stepRadius );
 
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

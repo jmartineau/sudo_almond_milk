@@ -57,7 +57,6 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         // Get references to the widgets in activity_prof_create.xml
         mainLanguageSpinner = (Spinner) findViewById(R.id.mainLangSpin);
         altLanguage1Spinner = (Spinner) findViewById(R.id.altLang1Spin);
@@ -104,6 +103,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
         minRadius = 10; // lower bound radius miles value
         maxRadius = 100; // upper bound radius miles value
         stepRadius = 10; // the interval to skip by when user drags seekbar
+        radiusTextNum = minRadius;
         radiusSeekBar.setMax( (maxRadius - minRadius) / stepRadius );
 
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
