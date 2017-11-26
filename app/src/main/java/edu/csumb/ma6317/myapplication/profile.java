@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,7 +15,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class profile extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +30,7 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
     private FirebaseUser mUser;
 
     // Widget variables
+    private TextView usernameText;
     private ImageView img;
     private Button addLangButton;
     private Button deleteLangButton;
@@ -34,6 +41,7 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_profile);
 
         // Get references to the widgets in activity_profile.xml
+        usernameText = (TextView) findViewById(R.id.usernameTxt);
         img = (ImageView) findViewById(R.id.userPicImg);
         addLangButton = (Button) findViewById(R.id.addLangButt);
         deleteLangButton = (Button) findViewById(R.id.deleteLangButt);
@@ -50,6 +58,14 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                String displayName = dataSnapshot.child(mUser.getUid()).child("displayName").getValue(String.class);
+
+                // GenericTypeIndicator is needed to retrieve arrays from Firebase
+                GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                List<String> languages = dataSnapshot.child(mUser.getUid()).child("languages").getValue(genericTypeIndicator);
+
+                displayProfileInfo(displayName, languages);
+
             }
 
             @Override
@@ -75,5 +91,11 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
             Intent intent = new Intent(this, deleteLang.class);
             //startActivity(intent);
         }
+    }
+
+    private boolean displayProfileInfo(String displayName, List languages) {
+        usernameText.setText(displayName);
+
+        return true;
     }
 }

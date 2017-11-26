@@ -7,7 +7,7 @@
     tools:context="edu.csumb.ma6317.myapplication.profile">
 
     <TextView
-        android:id="@+id/userNameTxt"
+        android:id="@+id/usernameTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="96dp"
