@@ -3,6 +3,7 @@ package edu.csumb.ma6317.myapplication;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -52,6 +53,9 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         img.setOnClickListener(this);
         addLangButton.setOnClickListener(this);
         deleteLangButton.setOnClickListener(this);
+
+        // Implement scrolling for languages TextView
+        languagesText.setMovementMethod(new ScrollingMovementMethod());
 
         // Read from Firebase database
         mAuth = FirebaseAuth.getInstance();
