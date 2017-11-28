@@ -2,17 +2,13 @@ package edu.csumb.ma6317.myapplication;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
-
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.LocationListener;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,8 +23,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -43,8 +48,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
 
     // GeoFire
+    private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
-    private GeoFire mGeoFire;
+    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +65,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("path/geofire");
-        mGeoFire = new GeoFire(mDatabaseRef);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<LatLng> locations = new ArrayList();
+                ArrayList<String> userNames = new ArrayList<>();
+
+                Double uLat = dataSnapshot.child(mUser.getUid()).child("latitude").getValue(Double.class);
+                Double uLon = dataSnapshot.child(mUser.getUid()).child("longitude").getValue(Double.class);
+                String reqLang = dataSnapshot.child(mUser.getUid()).child("requestLanguage").getValue(String.class);
+                String mainLang = dataSnapshot.child(mUser.getUid()).child("languages/0").getValue(String.class);
+                Location uLocation = new Location("");
+                uLocation.setLatitude(uLat);
+                uLocation.setLongitude(uLon);
+
+                int radius = dataSnapshot.child(mUser.getUid()).child("radius").getValue(Integer.class);
+                //Log.d("radius", String.valueOf(radius));
+                for(DataSnapshot item_snapshot:dataSnapshot.getChildren()) {
+
+                    Double lat = item_snapshot.child("latitude").getValue(Double.class);
+                    Double lon = item_snapshot.child("longitude").getValue(Double.class);
+                    Location gibLocation = new Location("");
+                    gibLocation.setLatitude(lat);
+                    gibLocation.setLongitude(lon);
+
+                    Double distance = calculateDistance(uLocation, gibLocation);
+                    Boolean isGibber = item_snapshot.child("isTranslator").getValue(Boolean.class);
+                    Set<String> language = new HashSet<>();
+
+                    for(int i = 0; i < 4; i++) {
+                        if(item_snapshot.child("languages/" + i).getValue(String.class) != null) {
+                            //Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
+                            userNames.add(item_snapshot.child("displayName").getValue(String.class));
+                            language.add(item_snapshot.child("languages/" + i).getValue(String.class));
+                        } else
+                            break;
+                    }
+
+                    // only add users who are translators and are within the specified range
+                    if(lat != uLat && lon != uLon && isGibber && distance <= radius &&
+                            language.contains(mainLang) && language.contains(reqLang))
+                        locations.add(new LatLng(lat, lon));
+                }
+                int i = 0;
+                for(LatLng location : locations) {
+                    Marker marker =  mMap.addMarker(new MarkerOptions()
+                            .title(userNames.get(i))
+                            .position(location)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                    marker.showInfoWindow();
+                    i++;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -137,33 +204,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
-        mGeoFire.setLocation("firebase-hq", new GeoLocation(location.getLatitude(), location.getLongitude()));
 
-        double earthRadius = 3958.75;
-        double lat2 = 36.9741;
-        double lng2 = -122.0308;
+        if (mAuth.getCurrentUser() != null) {
+            String uid = mUser.getUid();
+            mDatabaseRef.child(uid).child("latitude").setValue(location.getLatitude());
+            mDatabaseRef.child(uid).child("longitude").setValue(location.getLongitude());
+        }
 
-        double dLat = Math.toRadians(location.getLatitude()-lat2);
-        double dLng = Math.toRadians(location.getLongitude()-lng2);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(location.getLatitude())) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double dist = earthRadius * c;
-
-        LatLng latLng2 = new LatLng(lat2, lng2);
-        MarkerOptions markerOptions2 = new MarkerOptions();
-        markerOptions2.position(latLng2);
-        markerOptions2.title("Santa Cruz");
-        markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
-
-
-        Toast.makeText(getApplicationContext(),
-                "Distance to Santa Cruz: " + dist, Toast.LENGTH_LONG).show();
-
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng2));
+        //move map camera to user's current position
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
@@ -175,6 +224,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private  void setMarker(double lat, double lon) {
+        LatLng latLng2 = new LatLng(lat, lon);
+
+        MarkerOptions markerOptions2 = new MarkerOptions();
+        markerOptions2.position(latLng2);
+        markerOptions2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mCurrLocationMarker2 = mMap.addMarker(markerOptions2);
+    }
+
+    public double calculateDistance(Location loc1, Location loc2) {
+        double earthRadius = 3958.75;
+
+
+        double dLat = Math.toRadians(loc1.getLatitude()-loc2.getLatitude());
+        double dLng = Math.toRadians(loc1.getLongitude()-loc2.getLongitude());
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(loc2.getLatitude())) * Math.cos(Math.toRadians(loc1.getLatitude())) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = earthRadius * c;
+        return dist;
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -242,8 +313,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;
             }
 
-            // other 'case' lines to check for other permissions this app might request.
-            // You can add here other case statements according to your requirement.
         }
     }
 }

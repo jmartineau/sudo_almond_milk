@@ -9,9 +9,17 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class home extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+public class home extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+
+    private Button goButton;
+    private Button profileButton;
     private Spinner langRequestSpin;
     private SeekBar minutesAwaySeekBar;
     private TextView minutesText;
@@ -19,7 +27,11 @@ public class home extends AppCompatActivity {
     private int stepMinute;
     private int minMinute;
     private int maxMinute;
+    private boolean hasFoundSomeoneAvailable;
 
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +39,67 @@ public class home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         // Get references to the widgets in activity_home.xml
+        profileButton = (Button) findViewById(R.id.profileButt);
+        goButton = (Button) findViewById(R.id.seekButt);
         langRequestSpin = (Spinner) findViewById(R.id.langRequestSpin);
-        minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
         minutesText = (TextView) findViewById(R.id.info3Txt);
+        minutesAwaySeekBar = (SeekBar) findViewById(R.id.minutesAwaySeekBar);
 
         initializeLangRequestSpinner();
         initializeMinutesAwaySeekBar();
 
-        final Intent myIntent = new Intent(this, profile.class);
-        Button buttn = findViewById(R.id.profileButt);
-        buttn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(myIntent);
+        // Set the click listeners for the buttons
+        profileButton.setOnClickListener(this);
+        goButton.setOnClickListener(this);
+        goButton.setOnLongClickListener(this);
+
+        // For testing, set hasFoundSomeoneAvailable here
+        hasFoundSomeoneAvailable = true;
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+    }
+
+    public int add(int a, int b) {
+        return a+b;
+    }
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.profileButt) {
+            Intent intent = new Intent(this, profile.class);
+            startActivity(intent);
+        }
+
+        else if (v.getId() == R.id.seekButt) {
+            //TODO: Display "searching...." view
+
+            //TODO: SUCCESS
+            //User B is a translator, is nearby, and clicked accept request
+            if (hasFoundSomeoneAvailable){
+                Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, successMsg.class);
+                startActivity(intent);
             }
-        });
+            //TODO: FAILURE:
+            //User B clicked decline request, or no one nearby
+            else if (!hasFoundSomeoneAvailable){
+                Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, failMsg.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    public boolean onLongClick(View v) {
+
+        requestLanguage();
+
+        if (v.getId() == R.id.seekButt) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
+        return true;
     }
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
@@ -54,8 +113,16 @@ public class home extends AppCompatActivity {
         mainLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapters to the spinners
         langRequestSpin.setAdapter(mainLanguageAdapter);
-        //Should return true if sucessfully initialized to a default string value (English)
+        //Should return true if successfully initialized to a default string value (English)
         return (langRequestSpin.getSelectedItem().toString() != null);
+    }
+
+    // user selects the language that they need a translator for and gets sent to firebase
+    private void requestLanguage(){
+        String uid = mUser.getUid();
+        String reqLanguage = langRequestSpin.getSelectedItem().toString();
+        mDatabase.child("users").child(uid).child("requestLanguage").setValue(reqLanguage);
+
     }
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius

@@ -2,9 +2,9 @@ package edu.csumb.ma6317.myapplication;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class profCreate extends AppCompatActivity implements View.OnClickListener {
+public class profEdit extends AppCompatActivity implements View.OnClickListener {
 
     // Firebase instance variables
     private FirebaseAuth mAuth;
@@ -50,12 +50,13 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prof_create);
+        setContentView(R.layout.activity_prof_edit);
 
         // Initialize Firebase components
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         // Get references to the widgets in activity_prof_create.xml
         mainLanguageSpinner = (Spinner) findViewById(R.id.mainLangSpin);
@@ -77,13 +78,12 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.submitButt) {
             // Verify user input
-
             boolean inputValid = validateInput();
 
             if (inputValid == true) {
                 sendProfileToDatabase();
-                Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, home.class);
+                Toast.makeText(this, "Profile edited successfully!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, profile.class);
                 startActivity(intent);
             }
             else {
@@ -169,9 +169,6 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             String displayName = mUser.getDisplayName();
 
             mDatabase.child("users").child(uid).child("displayName").setValue(displayName);
-            mDatabase.child("users").child(uid).child("ratingAverage").setValue(5);
-            mDatabase.child("users").child(uid).child("ratingSum").setValue(5);
-            mDatabase.child("users").child(uid).child("ratingCount").setValue(1);
             mDatabase.child("users").child(uid).child("languages").setValue(userLanguages);
             mDatabase.child("users").child(uid).child("isTranslator").setValue(isTranslator);
             mDatabase.child("users").child(uid).child("radius").setValue(radiusTextNum);
@@ -194,7 +191,7 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
 
     // Displays error message if the same language is selected multiple times
     private void showErrorMessage() {
-        AlertDialog alertDialog = new AlertDialog.Builder(profCreate.this).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(profEdit.this).create();
         alertDialog.setTitle("Invalid Language Selection");
         String errorMessage = "Please ensure that no duplicate languages have been selected.";
         alertDialog.setMessage(errorMessage);
