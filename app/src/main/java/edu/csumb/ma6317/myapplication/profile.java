@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -92,7 +94,9 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         });
 
         //loads user's profile picture to an imageView (DiskCache & skipMem might be able to be taken out but this works for sure)
-        if (personId != "trash") {
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
+            personId = acct.getId();
             glStorageRef = FirebaseStorage.getInstance().getReference("images/users/" + personId + ".jpg");
             GlideApp.with(this).load(glStorageRef).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(myImg1);
         }
