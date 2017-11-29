@@ -95,7 +95,6 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius
     private void initializeSeekBar() {
-
         // Read this link to understand the logic of step
         // https://stackoverflow.com/questions/20762001/how-to-set-seekbar-min-and-max-value
 
@@ -120,8 +119,6 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
 
     // Initializes data to language Spinners (drop-down menus)
     private void initializeSpinners() {
-
-
         // Create two ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> mainLanguageAdapter = ArrayAdapter.createFromResource(this,
                 R.array.main_languages_array, android.R.layout.simple_spinner_item);
@@ -176,21 +173,9 @@ public class profCreate extends AppCompatActivity implements View.OnClickListene
             mDatabase.child("users").child(uid).child("isTranslator").setValue(isTranslator);
             mDatabase.child("users").child(uid).child("radius").setValue(radiusTextNum);
         }
-        // User is a guest
-        else {
-            // Generate random number to designate a guest
-            // Note: Not the best way to do this, just a placeholder for now
-            Random rand = new Random();
-            int guestNum = rand.nextInt(Integer.MAX_VALUE - 1) + 1;
-            String guestValue = Integer.toString(guestNum);
-            mDatabase.child("guests").child(guestValue).child("languages").setValue(userLanguages);
-            mDatabase.child("guests").child(guestValue).child("isTranslator").setValue(isTranslator);
-            mDatabase.child("guests").child(guestValue).child("radius").setValue(radiusTextNum);
-        }
 
         return true;
     }
-
 
     // Displays error message if the same language is selected multiple times
     private void showErrorMessage() {

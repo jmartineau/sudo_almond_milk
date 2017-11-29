@@ -1,6 +1,9 @@
 package edu.csumb.ma6317.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +16,14 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 public class home extends AppCompatActivity implements View.OnClickListener {
 
@@ -71,13 +80,11 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         }
 
         else if (v.getId() == R.id.seekButt) {
-            requestLanguage();
+            // Goes on to MapsActivity if successful, otherwise error
             Intent intent = new Intent(this, MapsActivity.class);
-            startActivity(intent);
-
+            requestLanguage(intent);
         }
     }
-
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
     private boolean initializeLangRequestSpinner() {
@@ -94,12 +101,50 @@ public class home extends AppCompatActivity implements View.OnClickListener {
         return (langRequestSpin.getSelectedItem().toString() != null);
     }
 
-    // user selects the language that they need a translator for and gets sent to firebase
-    private void requestLanguage(){
-        String uid = mUser.getUid();
-        String reqLanguage = langRequestSpin.getSelectedItem().toString();
-        mDatabase.child("users").child(uid).child("requestLanguage").setValue(reqLanguage);
+    // User selects the language that they need a translator for and gets sent to Firebase
+    // Goes on to MapsActivity if successful, otherwise error
+    private void requestLanguage(final Intent intent){
+        final String reqLanguage = langRequestSpin.getSelectedItem().toString();
 
+        // Read from Firebase database
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // GenericTypeIndicator is needed to retrieve arrays from Firebase
+                GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                List<String> languages = dataSnapshot.child("users").child(mUser.getUid()).child("languages").getValue(genericTypeIndicator);
+
+                System.out.println("Language status: " + languages.contains(reqLanguage));
+                if (languages.contains(reqLanguage)) {
+                    showErrorMessage();
+                }
+                else {
+                    mDatabase.child("users").child(mUser.getUid()).child("requestLanguage").setValue(reqLanguage);
+                    startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    // Displays error message if the same language is selected multiple times
+    private void showErrorMessage() {
+        AlertDialog alertDialog = new AlertDialog.Builder(home.this).create();
+        alertDialog.setTitle("Invalid Language Selection");
+        String errorMessage = "Please ensure that the requested language is not one you speak.";
+        alertDialog.setMessage(errorMessage);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius

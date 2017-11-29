@@ -32,9 +32,9 @@
         android:textSize="36sp" />
 
     <Button
-        android:id="@+id/guestButt"
+        android:id="@+id/signOutButt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Continue As Guest"
+        android:text="Sign Out"
         android:textSize="36sp" />
 </LinearLayout>

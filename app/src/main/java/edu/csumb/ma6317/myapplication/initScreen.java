@@ -52,7 +52,7 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
 
     // Button variables
     private Button signInButton;
-    private Button contGuestButton;
+    private Button signOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +64,11 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
 
         // Get references to the widgets in activity_init_screen.xml
         signInButton = (Button) findViewById(R.id.signInButt);
-        contGuestButton = (Button) findViewById(R.id.guestButt);
+        signOutButton = (Button) findViewById(R.id.signOutButt);
 
         // Set the click listeners for the buttons
         signInButton.setOnClickListener(this);
-        contGuestButton.setOnClickListener(this);
+        signOutButton.setOnClickListener(this);
 
         // Check if user exists in onCreate()
         // If done in onClick(), there's not enough time to process result before activity change
@@ -109,10 +109,9 @@ public class initScreen extends AppCompatActivity implements View.OnClickListene
                                 .build(),
                         RC_SIGN_IN);
             }
-        } else if (v.getId() == R.id.guestButt) {
+        } else if (v.getId() == R.id.signOutButt) {
             signOut();
-            Intent intent = new Intent(this, profCreate.class);
-            startActivity(intent);
+            Toast.makeText(this, "Signed Out!", Toast.LENGTH_SHORT).show();
         } else {
             return;
         }
