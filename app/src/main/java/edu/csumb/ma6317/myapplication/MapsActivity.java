@@ -85,7 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<LatLng> locations = new ArrayList();
                 ArrayList<String> userNames = new ArrayList<>();
-
                 Double uLat = dataSnapshot.child(mUser.getUid()).child("latitude").getValue(Double.class);
                 Double uLon = dataSnapshot.child(mUser.getUid()).child("longitude").getValue(Double.class);
                 String reqLang = dataSnapshot.child(mUser.getUid()).child("requestLanguage").getValue(String.class);
@@ -97,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int radius = dataSnapshot.child(mUser.getUid()).child("radius").getValue(Integer.class);
                 //Log.d("radius", String.valueOf(radius));
                 for(DataSnapshot item_snapshot:dataSnapshot.getChildren()) {
-
+                    String key = item_snapshot.getKey();
                     Double lat = item_snapshot.child("latitude").getValue(Double.class);
                     Double lon = item_snapshot.child("longitude").getValue(Double.class);
                     Location gibLocation = new Location("");
@@ -351,5 +350,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Intent intent = new Intent(getApplicationContext(), successMsg.class);
             startActivity(intent);
         }
+    }
+
+    public String getUserId(FirebaseUser user) {
+        String userId = user.getUid();
+        return userId;
     }
 }
