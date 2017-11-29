@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class home extends AppCompatActivity {
 
@@ -20,6 +24,12 @@ public class home extends AppCompatActivity {
     private int stepMinute;
     private int minMinute;
     private int maxMinute;
+
+    //NOTI CODE(1)
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    String dataTitle, dataMessage;
+    EditText title, message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,15 @@ public class home extends AppCompatActivity {
         buttn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(myIntent);
+            }
+        });
+
+        //NOTI CODE (2)
+        Button myButt = findViewById(R.id.CullensButt4Testing);
+        myButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
