@@ -19,15 +19,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class profile extends AppCompatActivity implements View.OnClickListener {
 
     // Firebase instance variables
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabase;
     private FirebaseUser mUser;
 
     // Widget variables
@@ -63,8 +61,8 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         // Read from Firebase database
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users");
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String displayName = dataSnapshot.child(mUser.getUid()).child("displayName").getValue(String.class);
