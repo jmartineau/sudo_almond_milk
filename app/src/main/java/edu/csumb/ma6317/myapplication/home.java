@@ -42,8 +42,6 @@ public class home extends AppCompatActivity implements View.OnClickListener {
     private DatabaseReference mDatabase;
     private FirebaseUser mUser;
 
-    public static boolean requestValid;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,11 +118,9 @@ public class home extends AppCompatActivity implements View.OnClickListener {
 
                 System.out.println("Language status: " + languages.contains(reqLanguage));
                 if (languages.contains(reqLanguage)) {
-                    requestValid = false;
                     showErrorMessage();
                 }
                 else {
-                    requestValid = true;
                     mDatabase.child("users").child(mUser.getUid()).child("requestLanguage").setValue(reqLanguage);
                     startActivity(intent);
                 }
