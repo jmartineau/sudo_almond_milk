@@ -16,8 +16,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,8 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
     private Spinner altLanguage1Spinner;
     private Spinner altLanguage2Spinner;
     private Spinner altLanguage3Spinner;
+    private ArrayAdapter<CharSequence> mainLanguageAdapter;
+    private ArrayAdapter<CharSequence> altLanguageAdapter;
 
     private TextView radiusText;
     private SeekBar radiusSeekBar;
@@ -57,7 +63,6 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         // Get references to the widgets in activity_prof_create.xml
         mainLanguageSpinner = (Spinner) findViewById(R.id.mainLangSpin);
         altLanguage1Spinner = (Spinner) findViewById(R.id.altLang1Spin);
@@ -73,6 +78,7 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
         // Initialize form elements
         initializeSpinners();
         initializeSeekBar();
+        populateProfileFields();
     }
 
     public void onClick(View v) {
@@ -95,7 +101,6 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius
     private void initializeSeekBar() {
-
         // Read this link to understand the logic of step
         // https://stackoverflow.com/questions/20762001/how-to-set-seekbar-min-and-max-value
 
@@ -120,13 +125,11 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
 
     // Initializes data to language Spinners (drop-down menus)
     private void initializeSpinners() {
-
-
         // Create two ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> mainLanguageAdapter = ArrayAdapter.createFromResource(this,
+        mainLanguageAdapter = ArrayAdapter.createFromResource(this,
                 R.array.main_languages_array, android.R.layout.simple_spinner_item);
 
-        ArrayAdapter<CharSequence> altLanguageAdapter = ArrayAdapter.createFromResource(this,
+        altLanguageAdapter = ArrayAdapter.createFromResource(this,
                 R.array.alt_languages_array, android.R.layout.simple_spinner_item);
 
         // Specify the layout to use when the list of choices appears
@@ -138,6 +141,67 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
         altLanguage1Spinner.setAdapter(altLanguageAdapter);
         altLanguage2Spinner.setAdapter(altLanguageAdapter);
         altLanguage3Spinner.setAdapter(altLanguageAdapter);
+    }
+
+    private void populateProfileFields() {
+        // Read from Firebase database
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // GenericTypeIndicator is needed to retrieve arrays from Firebase
+                GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                List<String> languages = dataSnapshot.child("users").child(mUser.getUid()).child("languages").getValue(genericTypeIndicator);
+
+                Boolean isTranslator = dataSnapshot.child("users").child(mUser.getUid()).child("isTranslator").getValue(Boolean.class);
+                Integer radius = dataSnapshot.child("users").child(mUser.getUid()).child("radius").getValue(Integer.class);
+
+                // Set language spinners
+                String mainLanguageValue = languages.get(0);
+                if (!mainLanguageValue.equals(null)) {
+                    int spinnerPosition = mainLanguageAdapter.getPosition(mainLanguageValue);
+                    mainLanguageSpinner.setSelection(spinnerPosition);
+                }
+
+                if (languages.size() > 1) {
+                    String altLanguageValue = languages.get(1);
+                    if (!altLanguageValue.equals(null)) {
+                        int spinnerPosition = altLanguageAdapter.getPosition(altLanguageValue);
+                        altLanguage1Spinner.setSelection(spinnerPosition);
+                    }
+                }
+
+                if (languages.size() > 2) {
+                    String altLanguageValue = languages.get(2);
+                    if (!altLanguageValue.equals(null)) {
+                        int spinnerPosition = altLanguageAdapter.getPosition(altLanguageValue);
+                        altLanguage2Spinner.setSelection(spinnerPosition);
+                    }
+                }
+
+                if (languages.size() > 3) {
+                    String altLanguageValue = languages.get(3);
+                    if (!altLanguageValue.equals(null)) {
+                        int spinnerPosition = altLanguageAdapter.getPosition(altLanguageValue);
+                        altLanguage3Spinner.setSelection(spinnerPosition);
+                    }
+                }
+
+                // Set translator Switch
+                Switch translatorSwitch = (Switch) findViewById(R.id.translatorSwitch);
+                if (isTranslator) {
+                    translatorSwitch.toggle();
+                }
+
+                // Set radius SeekBar
+                radiusSeekBar.setProgress((radius / stepRadius) - 1);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     // Retrieve data from widgets and send to Firebase Database
