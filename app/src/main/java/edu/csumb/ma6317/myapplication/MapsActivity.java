@@ -108,38 +108,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Boolean isGibber = item_snapshot.child("isTranslator").getValue(Boolean.class);
 
 
-                    for(int i = 0; i < 4; i++) {
-                        if(item_snapshot.child("languages/" + i).getValue(String.class) != null) {
-                            //Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
+                    int i = 0;
+                    if(isGibber && !userNames.contains(item_snapshot.child("displayName").getValue(String.class))) {
+                        while (item_snapshot.child("languages/" + i).getValue(String.class) != null) {
+                            Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
+                            Log.d("user lang", String.valueOf(item_snapshot.child("languages/" + i).getValue(String.class)));
                             userNames.add(item_snapshot.child("displayName").getValue(String.class));
                             language.add(item_snapshot.child("languages/" + i).getValue(String.class));
-                        } else
-                            break;
+                            i++;
+                        }
                     }
 
 
 
                     // only add users who are translators and are within the specified range
-                    if(lat != uLat && lon != uLon && isGibber && distance <= radius &&
+                    if(lat != uLat && lon != uLon && distance <= radius &&
                             language.contains(mainLang) && language.contains(reqLang)) {
                         locations.add(new LatLng(lat, lon));
                         hasFoundSomeoneAvailable = true;
 
                     }
-
+                    language.clear();
                 }
 
                 if(locations.isEmpty())
                     Toast.makeText(getApplicationContext(), "No one nearby. :(", Toast.LENGTH_SHORT).show();
+                else {
+                    int i = 0;
+                    for (LatLng location : locations) {
+                        mMap.addMarker(new MarkerOptions()
+                                .title(userNames.get(i))
+                                .position(location)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
-                int i = 0;
-                for(LatLng location : locations) {
-                    mMap.addMarker(new MarkerOptions()
-                    .title(userNames.get(i))
-                    .position(location)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
-                    i++;
+                        i++;
+                    }
                 }
 
             }
