@@ -173,17 +173,6 @@ public class profEdit extends AppCompatActivity implements View.OnClickListener 
             mDatabase.child("users").child(uid).child("isTranslator").setValue(isTranslator);
             mDatabase.child("users").child(uid).child("radius").setValue(radiusTextNum);
         }
-        // User is a guest
-        else {
-            // Generate random number to designate a guest
-            // Note: Not the best way to do this, just a placeholder for now
-            Random rand = new Random();
-            int guestNum = rand.nextInt(Integer.MAX_VALUE - 1) + 1;
-            String guestValue = Integer.toString(guestNum);
-            mDatabase.child("guests").child(guestValue).child("languages").setValue(userLanguages);
-            mDatabase.child("guests").child(guestValue).child("isTranslator").setValue(isTranslator);
-            mDatabase.child("guests").child(guestValue).child("radius").setValue(radiusTextNum);
-        }
 
         return true;
     }
