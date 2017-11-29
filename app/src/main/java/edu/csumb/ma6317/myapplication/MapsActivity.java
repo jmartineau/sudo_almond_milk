@@ -1,5 +1,6 @@
 package edu.csumb.ma6317.myapplication;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import com.google.android.gms.location.LocationListener;
@@ -9,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -32,11 +35,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener, View.OnClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -50,10 +55,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference mDatabaseRef;
     private FirebaseUser mUser;
 
+    private boolean hasFoundSomeoneAvailable;
+    private Button mComfirmButton;
+
+    private Set<String> language = new HashSet<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        hasFoundSomeoneAvailable = false;
+
+        mComfirmButton = findViewById(R.id.button_confirm);
+        mComfirmButton.setOnClickListener(this);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -70,9 +84,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<LatLng> locations = new ArrayList();
+                ArrayList<String> userNames = new ArrayList<>();
 
                 Double uLat = dataSnapshot.child(mUser.getUid()).child("latitude").getValue(Double.class);
                 Double uLon = dataSnapshot.child(mUser.getUid()).child("longitude").getValue(Double.class);
+                String reqLang = dataSnapshot.child(mUser.getUid()).child("requestLanguage").getValue(String.class);
+                String mainLang = dataSnapshot.child(mUser.getUid()).child("languages/0").getValue(String.class);
                 Location uLocation = new Location("");
                 uLocation.setLatitude(uLat);
                 uLocation.setLongitude(uLon);
@@ -90,14 +107,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Double distance = calculateDistance(uLocation, gibLocation);
                     Boolean isGibber = item_snapshot.child("isTranslator").getValue(Boolean.class);
 
+
+                    int i = 0;
+                    if(isGibber && !userNames.contains(item_snapshot.child("displayName").getValue(String.class))) {
+                        while (item_snapshot.child("languages/" + i).getValue(String.class) != null) {
+                            Log.d("user", String.valueOf(item_snapshot.child("displayName").getValue(String.class)));
+                            Log.d("user lang", String.valueOf(item_snapshot.child("languages/" + i).getValue(String.class)));
+                            userNames.add(item_snapshot.child("displayName").getValue(String.class));
+                            language.add(item_snapshot.child("languages/" + i).getValue(String.class));
+                            i++;
+                        }
+                    }
+
+
+
                     // only add users who are translators and are within the specified range
-                    if(lat != uLat && lon != uLon && isGibber && distance <= radius)
+                    if(lat != uLat && lon != uLon && distance <= radius &&
+                            language.contains(mainLang) && language.contains(reqLang)) {
                         locations.add(new LatLng(lat, lon));
+                        hasFoundSomeoneAvailable = true;
+
+                    }
+                    language.clear();
                 }
-                for(LatLng location : locations) {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(location)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+                if(locations.isEmpty())
+                    Toast.makeText(getApplicationContext(), "No one nearby. :(", Toast.LENGTH_SHORT).show();
+                else {
+                    int i = 0;
+                    for (LatLng location : locations) {
+                        mMap.addMarker(new MarkerOptions()
+                                .title(userNames.get(i))
+                                .position(location)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+                        i++;
+                    }
                 }
 
             }
@@ -293,6 +338,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;
             }
 
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(!hasFoundSomeoneAvailable) {
+            Toast.makeText(getApplicationContext(), "No one nearby. :(", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), failMsg.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplicationContext(), successMsg.class);
+            startActivity(intent);
         }
     }
 }

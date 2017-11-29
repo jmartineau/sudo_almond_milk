@@ -11,7 +11,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class home extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+public class home extends AppCompatActivity implements View.OnClickListener {
 
     private Button goButton;
     private Button profileButton;
@@ -23,6 +28,10 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
     private int minMinute;
     private int maxMinute;
     private boolean hasFoundSomeoneAvailable;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +51,13 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         // Set the click listeners for the buttons
         profileButton.setOnClickListener(this);
         goButton.setOnClickListener(this);
-        goButton.setOnLongClickListener(this);
 
         // For testing, set hasFoundSomeoneAvailable here
         hasFoundSomeoneAvailable = true;
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
     }
 
     public int add(int a, int b) {
@@ -59,33 +71,13 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         }
 
         else if (v.getId() == R.id.seekButt) {
-            //TODO: Display "searching...." view
-
-            //TODO: SUCCESS
-            //User B is a translator, is nearby, and clicked accept request
-            if (hasFoundSomeoneAvailable){
-                Toast.makeText(this, "Found someone! :D", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, successMsg.class);
-                startActivity(intent);
-            }
-            //TODO: FAILURE:
-            //User B clicked decline request, or no one nearby
-            else if (!hasFoundSomeoneAvailable){
-                Toast.makeText(this, "No one nearby. :(", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, failMsg.class);
-                startActivity(intent);
-            }
-        }
-    }
-
-    public boolean onLongClick(View v) {
-        // oops! I broke the code, but I'll fix it soon!
-        if (v.getId() == R.id.seekButt) {
+            requestLanguage();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
+
         }
-        return true;
     }
+
 
     // Initializes the langRequestSpin with the list of languages in values/strings.xml
     private boolean initializeLangRequestSpinner() {
@@ -100,6 +92,14 @@ public class home extends AppCompatActivity implements View.OnClickListener, Vie
         langRequestSpin.setAdapter(mainLanguageAdapter);
         //Should return true if successfully initialized to a default string value (English)
         return (langRequestSpin.getSelectedItem().toString() != null);
+    }
+
+    // user selects the language that they need a translator for and gets sent to firebase
+    private void requestLanguage(){
+        String uid = mUser.getUid();
+        String reqLanguage = langRequestSpin.getSelectedItem().toString();
+        mDatabase.child("users").child(uid).child("requestLanguage").setValue(reqLanguage);
+
     }
 
     // Initializes the SeekBar and allows SeekBar changes to update the radius
