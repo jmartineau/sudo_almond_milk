@@ -36,6 +36,7 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
     private ImageView img;
     private Button editProfileButton;
     private Button translationLogButton;
+    private Button returnHomeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,13 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
         img = (ImageView) findViewById(R.id.userPicImg);
         editProfileButton = (Button) findViewById(R.id.editProfileButt);
         translationLogButton = (Button) findViewById(R.id.translationLogButt);
+        returnHomeButton = (Button) findViewById(R.id.returnHomeButt);
 
         // Set the click listeners for the buttons
         img.setOnClickListener(this);
         editProfileButton.setOnClickListener(this);
         translationLogButton.setOnClickListener(this);
+        returnHomeButton.setOnClickListener(this);
 
         // Implement scrolling for languages TextView
         languagesText.setMovementMethod(new ScrollingMovementMethod());
@@ -94,6 +97,10 @@ public class profile extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(this, "Translation Log Button Clicked", Toast.LENGTH_SHORT).show();
             //Intent intent = new Intent(this, translationLog.class);
             //startActivity(intent);
+        }
+        else if (v.getId() == R.id.returnHomeButt) {
+            Intent intent = new Intent(this, home.class);
+            startActivity(intent);
         }
     }
 
